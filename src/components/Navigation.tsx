@@ -37,8 +37,13 @@ export const Navigation = () => {
                 </Link>
               ))}
             </div>
-            <Link to="/teacher-login">
+            <Link to="/student-login">
               <Button variant="outline" className="ml-4">
+                Student Login
+              </Button>
+            </Link>
+            <Link to="/teacher-login">
+              <Button variant="outline">
                 Teacher Login
               </Button>
             </Link>
@@ -70,6 +75,15 @@ export const Navigation = () => {
                 {subject}
               </Link>
             ))}
+            <Link
+              to="/student-login"
+              className="block px-3 py-2"
+              onClick={() => setIsOpen(false)}
+            >
+              <Button variant="outline" className="w-full">
+                Student Login
+              </Button>
+            </Link>
             <Link
               to="/teacher-login"
               className="block px-3 py-2"

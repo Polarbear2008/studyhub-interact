@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navigation } from "./components/Navigation";
 import { HomePage } from "./components/HomePage";
 import { TeacherLogin } from "./components/TeacherLogin";
+import { StudentLogin } from "./components/StudentLogin";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/teacher-login" element={<TeacherLogin />} />
+          <Route path="/student-login" element={<StudentLogin />} />
         </Routes>
       </BrowserRouter>
       <Toaster />
