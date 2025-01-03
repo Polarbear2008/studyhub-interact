@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Book, GraduationCap, Users, Brain, Calculator, Microscope, Star, UserPlus, ThumbsUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Footer } from "./Footer";
 
 export const HomePage = () => {
   const features = [
@@ -75,7 +76,6 @@ export const HomePage = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-accent">
         <div className="absolute inset-0 bg-grid-white/[0.2] bg-[size:20px_20px]" />
         <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
@@ -119,8 +119,7 @@ export const HomePage = () => {
           </div>
         </div>
       </div>
-
-      {/* Features Section */}
+      
       <div className="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-center mb-12">
           Why Choose Us
@@ -146,8 +145,7 @@ export const HomePage = () => {
           ))}
         </div>
       </div>
-
-      {/* Hire Tutor Application Section */}
+      
       <div className="bg-gradient-to-br from-purple-50 to-indigo-50 py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <motion.div
@@ -170,8 +168,7 @@ export const HomePage = () => {
           </motion.div>
         </div>
       </div>
-
-      {/* Reviews Section */}
+      
       <div className="bg-white py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <motion.div
@@ -217,8 +214,7 @@ export const HomePage = () => {
           </div>
         </div>
       </div>
-
-      {/* Platform Encouragement Section */}
+      
       <div className="bg-gradient-to-br from-blue-50 to-purple-50 py-16 px-4">
         <div className="max-w-7xl mx-auto">
           <motion.div
@@ -241,8 +237,7 @@ export const HomePage = () => {
           </motion.div>
         </div>
       </div>
-
-      {/* Subjects Grid */}
+      
       <div className="bg-gray-50 py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">
@@ -275,8 +270,7 @@ export const HomePage = () => {
           </div>
         </div>
       </div>
-
-      {/* Call to Action */}
+      
       <div className="bg-primary">
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -295,6 +289,8 @@ export const HomePage = () => {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };
