@@ -35,26 +35,41 @@ export const Navigation = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
-            <div className="flex flex-wrap gap-2">
-              {subjects.map((subject) => (
-                <Link
-                  key={subject}
-                  to={`/subjects/${subject.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap"
-                >
-                  {subject}
-                </Link>
-              ))}
+          <div className="hidden md:flex items-center space-x-6">
+            {/* Subjects Dropdown */}
+            <div className="relative group">
+              <button className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+                Subjects
+              </button>
+              <div className="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="py-1 max-h-96 overflow-y-auto">
+                  {subjects.map((subject) => (
+                    <Link
+                      key={subject}
+                      to={`/subjects/${subject.toLowerCase().replace(/\s+/g, '-')}`}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      {subject}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
+
+            <Link to="/pricing" className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+              Pricing
+            </Link>
+            <Link to="/hire-tutor" className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+              Hire Tutor
+            </Link>
             <Link to="/student-login">
               <Button variant="outline" className="ml-4">
-                Student Login
+                Login
               </Button>
             </Link>
-            <Link to="/teacher-login">
-              <Button variant="outline">
-                Teacher Login
+            <Link to="/student-login">
+              <Button>
+                Sign Up
               </Button>
             </Link>
           </div>
@@ -75,32 +90,54 @@ export const Navigation = () => {
       {isOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {subjects.map((subject) => (
-              <Link
-                key={subject}
-                to={`/subjects/${subject.toLowerCase().replace(/\s+/g, '-')}`}
-                className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
+            <div className="space-y-1">
+              <button
+                className="w-full text-left text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsOpen(false)}
               >
-                {subject}
-              </Link>
-            ))}
+                Subjects
+              </button>
+              {subjects.map((subject) => (
+                <Link
+                  key={subject}
+                  to={`/subjects/${subject.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium pl-6"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {subject}
+                </Link>
+              ))}
+            </div>
+            <Link
+              to="/pricing"
+              className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
+              onClick={() => setIsOpen(false)}
+            >
+              Pricing
+            </Link>
+            <Link
+              to="/hire-tutor"
+              className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
+              onClick={() => setIsOpen(false)}
+            >
+              Hire Tutor
+            </Link>
             <Link
               to="/student-login"
               className="block px-3 py-2"
               onClick={() => setIsOpen(false)}
             >
               <Button variant="outline" className="w-full">
-                Student Login
+                Login
               </Button>
             </Link>
             <Link
-              to="/teacher-login"
+              to="/student-login"
               className="block px-3 py-2"
               onClick={() => setIsOpen(false)}
             >
-              <Button variant="outline" className="w-full">
-                Teacher Login
+              <Button className="w-full">
+                Sign Up
               </Button>
             </Link>
           </div>
