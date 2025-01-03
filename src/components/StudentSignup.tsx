@@ -17,6 +17,7 @@ export const StudentSignup = () => {
       toast({
         title: "Error",
         description: "Passwords do not match",
+        variant: "destructive"
       });
       return;
     }
@@ -30,14 +31,16 @@ export const StudentSignup = () => {
   const handleGoogleSignup = () => {
     toast({
       title: "Google Sign Up",
-      description: "Google registration would happen here.",
+      description: "To implement secure Google authentication, we recommend connecting to a backend service like Supabase. For now, this is just a demo.",
+      duration: 5000,
     });
   };
 
   const handleAppleSignup = () => {
     toast({
       title: "Apple Sign Up",
-      description: "Apple registration would happen here.",
+      description: "To implement secure Apple authentication, we recommend connecting to a backend service like Supabase. For now, this is just a demo.",
+      duration: 5000,
     });
   };
 
@@ -54,7 +57,7 @@ export const StudentSignup = () => {
             <div className="grid grid-cols-2 gap-4">
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full hover:bg-gray-100 transition-colors"
                 onClick={handleGoogleSignup}
               >
                 <Chrome className="mr-2 h-4 w-4" />
@@ -62,7 +65,7 @@ export const StudentSignup = () => {
               </Button>
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full hover:bg-gray-100 transition-colors"
                 onClick={handleAppleSignup}
               >
                 <Apple className="mr-2 h-4 w-4" />

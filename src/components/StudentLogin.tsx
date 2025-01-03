@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Apple, Chrome } from "lucide-react";
 
 export const StudentLogin = () => {
@@ -12,7 +12,6 @@ export const StudentLogin = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, we would handle authentication here
     toast({
       title: "Login Attempted",
       description: "This is a demo. Student authentication would happen here.",
@@ -22,14 +21,16 @@ export const StudentLogin = () => {
   const handleGoogleLogin = () => {
     toast({
       title: "Google Login",
-      description: "Google authentication would happen here.",
+      description: "To implement secure Google authentication, we recommend connecting to a backend service like Supabase. For now, this is just a demo.",
+      duration: 5000,
     });
   };
 
   const handleAppleLogin = () => {
     toast({
       title: "Apple Login",
-      description: "Apple authentication would happen here.",
+      description: "To implement secure Apple authentication, we recommend connecting to a backend service like Supabase. For now, this is just a demo.",
+      duration: 5000,
     });
   };
 
@@ -46,7 +47,7 @@ export const StudentLogin = () => {
             <div className="grid grid-cols-2 gap-4">
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full hover:bg-gray-100 transition-colors"
                 onClick={handleGoogleLogin}
               >
                 <Chrome className="mr-2 h-4 w-4" />
@@ -54,7 +55,7 @@ export const StudentLogin = () => {
               </Button>
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full hover:bg-gray-100 transition-colors"
                 onClick={handleAppleLogin}
               >
                 <Apple className="mr-2 h-4 w-4" />
