@@ -7,10 +7,11 @@ export const ResourcesPracticePage = () => {
       { name: "AQA", path: "aqa" },
       { name: "CIE", path: "cie" }
     ],
-    "AP": [
-      { name: "College Board", path: "college-board" }
+    "AS-Level": [
+      { name: "AQA", path: "aqa" },
+      { name: "CIE", path: "cie" }
     ],
-    "GCSE": [
+    "IGCSE": [
       { name: "AQA", path: "aqa" },
       { name: "Edexcel", path: "edexcel" },
       { name: "OCR", path: "ocr" }
