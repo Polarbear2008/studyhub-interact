@@ -7,6 +7,7 @@ import { Navigation } from "./components/Navigation";
 import { HomePage } from "./components/HomePage";
 import { TeacherLogin } from "./components/TeacherLogin";
 import { StudentLogin } from "./components/StudentLogin";
+import { SubjectsPage } from "./components/SubjectsPage";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
           <Route path="/" element={<HomePage />} />
           <Route path="/teacher-login" element={<TeacherLogin />} />
           <Route path="/student-login" element={<StudentLogin />} />
+          <Route path="/subjects" element={<SubjectsPage />} />
         </Routes>
       </BrowserRouter>
       <Toaster />
