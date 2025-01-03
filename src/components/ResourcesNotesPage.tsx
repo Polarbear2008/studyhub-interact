@@ -5,14 +5,19 @@ export const ResourcesNotesPage = () => {
   const examBoards = {
     "A-Level": [
       { name: "AQA", path: "aqa" },
-      { name: "CIE", path: "cie" }
+      { name: "CIE", path: "cie" },
+      { name: "Edexcel", path: "edexcel" },
+      { name: "OCR", path: "ocr" }
     ],
     "AS-Level": [
       { name: "AQA", path: "aqa" },
-      { name: "CIE", path: "cie" }
+      { name: "CIE", path: "cie" },
+      { name: "Edexcel", path: "edexcel" },
+      { name: "OCR", path: "ocr" }
     ],
     "IGCSE": [
       { name: "AQA", path: "aqa" },
+      { name: "CIE", path: "cie" },
       { name: "Edexcel", path: "edexcel" },
       { name: "OCR", path: "ocr" }
     ]
