@@ -5,22 +5,70 @@ import { FileText } from "lucide-react";
 export const ResourcesPapersPage = () => {
   const examBoards = {
     "A-Level": [
-      { name: "AQA", path: "aqa" },
-      { name: "CIE", path: "cie" },
-      { name: "Edexcel", path: "edexcel" },
-      { name: "OCR", path: "ocr" }
+      { 
+        name: "AQA", 
+        path: "aqa",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "CIE", 
+        path: "cie",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "Edexcel", 
+        path: "edexcel",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "OCR", 
+        path: "ocr",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      }
     ],
     "AS-Level": [
-      { name: "AQA", path: "aqa" },
-      { name: "CIE", path: "cie" },
-      { name: "Edexcel", path: "edexcel" },
-      { name: "OCR", path: "ocr" }
+      { 
+        name: "AQA", 
+        path: "aqa",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "CIE", 
+        path: "cie",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "Edexcel", 
+        path: "edexcel",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "OCR", 
+        path: "ocr",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      }
     ],
     "IGCSE": [
-      { name: "AQA", path: "aqa" },
-      { name: "CIE", path: "cie" },
-      { name: "Edexcel", path: "edexcel" },
-      { name: "OCR", path: "ocr" }
+      { 
+        name: "AQA", 
+        path: "aqa",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "CIE", 
+        path: "cie",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "Edexcel", 
+        path: "edexcel",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "OCR", 
+        path: "ocr",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      }
     ]
   };
 
@@ -37,10 +85,7 @@ export const ResourcesPapersPage = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-orange-500/0 via-orange-500/0 to-orange-500/0 group-hover:from-orange-500/5 group-hover:via-orange-500/5 group-hover:to-orange-500/5 transition-all duration-300" />
                   <CardHeader className="p-6">
                     <CardTitle className="text-lg font-medium">
-                      <Link 
-                        to={`/resources/papers/${level.toLowerCase()}/${board.path}`}
-                        className="flex items-center justify-between"
-                      >
+                      <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                           <FileText className="h-6 w-6 text-orange-600" />
                           <div>
@@ -48,8 +93,19 @@ export const ResourcesPapersPage = () => {
                             <div className="text-sm text-orange-600/80">{level}</div>
                           </div>
                         </div>
-                      </Link>
+                      </div>
                     </CardTitle>
+                    <div className="mt-4 space-y-2 relative z-10">
+                      {board.subjects.map((subject) => (
+                        <Link
+                          key={subject}
+                          to={`/resources/papers/${level.toLowerCase()}/${board.path}/${subject.toLowerCase()}`}
+                          className="block p-2 text-sm text-orange-700 hover:bg-orange-50 rounded-md transition-colors"
+                        >
+                          {subject}
+                        </Link>
+                      ))}
+                    </div>
                   </CardHeader>
                 </Card>
               ))}

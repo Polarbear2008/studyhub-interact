@@ -5,22 +5,70 @@ import { BookOpen } from "lucide-react";
 export const ResourcesNotesPage = () => {
   const examBoards = {
     "A-Level": [
-      { name: "AQA", path: "aqa" },
-      { name: "CIE", path: "cie" },
-      { name: "Edexcel", path: "edexcel" },
-      { name: "OCR", path: "ocr" }
+      { 
+        name: "AQA", 
+        path: "aqa",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "CIE", 
+        path: "cie",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "Edexcel", 
+        path: "edexcel",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "OCR", 
+        path: "ocr",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      }
     ],
     "AS-Level": [
-      { name: "AQA", path: "aqa" },
-      { name: "CIE", path: "cie" },
-      { name: "Edexcel", path: "edexcel" },
-      { name: "OCR", path: "ocr" }
+      { 
+        name: "AQA", 
+        path: "aqa",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "CIE", 
+        path: "cie",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "Edexcel", 
+        path: "edexcel",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "OCR", 
+        path: "ocr",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      }
     ],
     "IGCSE": [
-      { name: "AQA", path: "aqa" },
-      { name: "CIE", path: "cie" },
-      { name: "Edexcel", path: "edexcel" },
-      { name: "OCR", path: "ocr" }
+      { 
+        name: "AQA", 
+        path: "aqa",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "CIE", 
+        path: "cie",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "Edexcel", 
+        path: "edexcel",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      },
+      { 
+        name: "OCR", 
+        path: "ocr",
+        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      }
     ]
   };
 
@@ -36,17 +84,25 @@ export const ResourcesNotesPage = () => {
                 <Card key={board.path} className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-white border-indigo-100">
                   <CardHeader className="p-4">
                     <CardTitle className="text-lg font-medium">
-                      <Link 
-                        to={`/resources/notes/${level.toLowerCase()}/${board.path}`}
-                        className="flex items-center justify-between group"
-                      >
+                      <div className="flex items-center justify-between group">
                         <div className="flex items-center space-x-3">
                           <BookOpen className="h-5 w-5 text-indigo-600" />
                           <span className="text-indigo-900">{board.name}</span>
                         </div>
                         <span className="text-sm text-indigo-600 opacity-75">{level}</span>
-                      </Link>
+                      </div>
                     </CardTitle>
+                    <div className="mt-4 space-y-2">
+                      {board.subjects.map((subject) => (
+                        <Link
+                          key={subject}
+                          to={`/resources/notes/${level.toLowerCase()}/${board.path}/${subject.toLowerCase()}`}
+                          className="block p-2 text-sm text-indigo-700 hover:bg-indigo-50 rounded-md transition-colors"
+                        >
+                          {subject}
+                        </Link>
+                      ))}
+                    </div>
                   </CardHeader>
                 </Card>
               ))}
