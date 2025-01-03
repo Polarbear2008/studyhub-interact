@@ -51,9 +51,12 @@ export const Navigation = () => {
 
             {/* Resources Dropdown */}
             <div className="relative group">
-              <button className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+              <Link 
+                to="/resources/notes"
+                className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium"
+              >
                 Resources
-              </button>
+              </Link>
               <div className="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div className="py-1">
                   {resources.map((resource) => (
@@ -113,12 +116,13 @@ export const Navigation = () => {
 
             {/* Mobile Resources Menu */}
             <div className="space-y-1">
-              <button
-                className="w-full text-left text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
+              <Link
+                to="/resources/notes"
+                className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsOpen(false)}
               >
                 Resources
-              </button>
+              </Link>
               {resources.map((resource) => (
                 <Link
                   key={resource.name}
