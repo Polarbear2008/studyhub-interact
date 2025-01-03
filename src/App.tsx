@@ -14,6 +14,7 @@ import { ResourcesNotesPage } from "./components/ResourcesNotesPage";
 import { ResourcesPracticePage } from "./components/ResourcesPracticePage";
 import { ResourcesPapersPage } from "./components/ResourcesPapersPage";
 import { HireTutor } from "./components/HireTutor";
+import { PricingPage } from "./components/PricingPage";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
           <Route path="/resources/practice" element={<ResourcesPracticePage />} />
           <Route path="/resources/papers" element={<ResourcesPapersPage />} />
           <Route path="/hire-tutor" element={<HireTutor />} />
+          <Route path="/pricing" element={<PricingPage />} />
         </Routes>
       </BrowserRouter>
       <Toaster />
