@@ -67,7 +67,7 @@ export const Navigation = () => {
                 Login
               </Button>
             </Link>
-            <Link to="/student-login">
+            <Link to="/student-signup">
               <Button>
                 Sign Up
               </Button>
@@ -132,7 +132,7 @@ export const Navigation = () => {
               </Button>
             </Link>
             <Link
-              to="/student-login"
+              to="/student-signup"
               className="block px-3 py-2"
               onClick={() => setIsOpen(false)}
             >
