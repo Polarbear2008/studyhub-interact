@@ -1,31 +1,76 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GraduationCap, Star, UserRound } from "lucide-react";
+import { GraduationCap, Search, Star, UserRound, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const HireTutor = () => {
+  const [selectedSubject, setSelectedSubject] = useState<string>("all");
+  const [selectedLevel, setSelectedLevel] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const subjects = [
+    "All Subjects",
+    "Mathematics",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "English",
+    "Computer Science"
+  ];
+
+  const levels = [
+    "All Levels",
+    "A Level",
+    "AS Level",
+    "IGCSE",
+    "O Level"
+  ];
+
   const featuredTutors = [
     {
       name: "Dr. Sarah Mitchell",
       image: "/lovable-uploads/6fad200d-56d6-4627-a36f-7a9bcc3fc156.png",
       qualifications: "PhD in Physics | Cambridge University",
       subjects: ["Physics", "Mathematics", "Chemistry"],
+      levels: ["A Level", "AS Level"],
       rating: 4.9,
       reviews: 127,
-      description: "Experienced tutor specializing in A-Level Physics and Mathematics. Passionate about making complex concepts accessible to all students."
+      description: "Experienced tutor specializing in A-Level Physics and Mathematics. Passionate about making complex concepts accessible to all students.",
+      hourlyRate: "$50"
+    },
+    {
+      name: "Prof. James Wilson",
+      image: "/lovable-uploads/6fad200d-56d6-4627-a36f-7a9bcc3fc156.png",
+      qualifications: "MSc in Computer Science | Oxford University",
+      subjects: ["Computer Science", "Mathematics"],
+      levels: ["IGCSE", "A Level"],
+      rating: 4.8,
+      reviews: 98,
+      description: "Expert in Computer Science and Mathematics with 10+ years of teaching experience. Specializes in programming and algorithm design.",
+      hourlyRate: "$45"
     }
   ];
+
+  const filteredTutors = featuredTutors.filter(tutor => {
+    const matchesSubject = selectedSubject === "all" || tutor.subjects.includes(selectedSubject);
+    const matchesLevel = selectedLevel === "all" || tutor.levels.includes(selectedLevel);
+    const matchesSearch = tutor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         tutor.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSubject && matchesLevel && matchesSearch;
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Professional Online Tutors
+          Find Your Perfect Tutor
         </h1>
         <p className="text-xl text-gray-600 mb-6">
-          Learn from qualified tutors at a time that fits your schedule.
-          Trusted by 5000+ parents and students globally.
+          Connect with experienced tutors who can help you excel in your studies.
+          Personalized learning at your fingertips.
         </p>
         <div className="flex justify-center gap-4 mb-8">
           <div className="flex items-center gap-2">
@@ -41,13 +86,52 @@ export const HireTutor = () => {
         </div>
       </div>
 
-      {/* Tutor Spotlight Section */}
+      {/* Search and Filter Section */}
+      <div className="max-w-7xl mx-auto mb-12">
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search tutors..."
+                className="w-full pl-10 pr-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <Select value={selectedSubject} onValueChange={setSelectedSubject}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select Subject" />
+              </SelectTrigger>
+              <SelectContent>
+                {subjects.map((subject) => (
+                  <SelectItem key={subject} value={subject.toLowerCase()}>
+                    {subject}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select Level" />
+              </SelectTrigger>
+              <SelectContent>
+                {levels.map((level) => (
+                  <SelectItem key={level} value={level.toLowerCase()}>
+                    {level}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </div>
+
+      {/* Tutor Cards Section */}
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">
-          Tutor Spotlight
-        </h2>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {featuredTutors.map((tutor, index) => (
+          {filteredTutors.map((tutor, index) => (
             <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
               <CardHeader className="pb-0">
                 <div className="flex items-start gap-4">
@@ -91,6 +175,19 @@ export const HireTutor = () => {
                       {subject}
                     </span>
                   ))}
+                </div>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {tutor.levels.map((level, idx) => (
+                    <span
+                      key={idx}
+                      className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm"
+                    >
+                      {level}
+                    </span>
+                  ))}
+                </div>
+                <div className="text-xl font-bold text-primary mb-4">
+                  {tutor.hourlyRate}/hour
                 </div>
                 <div className="flex gap-4">
                   <Button className="w-full">
