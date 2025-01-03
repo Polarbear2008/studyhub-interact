@@ -35,10 +35,12 @@ export const TeacherLogin = () => {
 
   if (isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <Card className="max-w-2xl mx-auto">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8 animate-fade-in">
+        <Card className="max-w-2xl mx-auto transform transition-all duration-300 hover:shadow-xl">
           <CardHeader>
-            <CardTitle>Upload Teaching Materials</CardTitle>
+            <CardTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+              Upload Teaching Materials
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleNoteUpload} className="space-y-6">
@@ -49,10 +51,15 @@ export const TeacherLogin = () => {
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   placeholder="Enter your revision notes here..."
-                  className="mt-1 h-40"
+                  className="mt-1 h-40 transition-all duration-300 focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              <Button type="submit">Upload Notes</Button>
+              <Button 
+                type="submit"
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105"
+              >
+                Upload Notes
+              </Button>
             </form>
           </CardContent>
         </Card>
@@ -61,16 +68,16 @@ export const TeacherLogin = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8 animate-fade-in">
+      <Card className="w-full max-w-md transform transition-all duration-300 hover:shadow-xl">
         <CardHeader>
-          <CardTitle className="text-center text-2xl font-bold">
+          <CardTitle className="text-center text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
             Teacher Login
           </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-6">
-            <div>
+            <div className="space-y-2">
               <label
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
@@ -83,11 +90,11 @@ export const TeacherLogin = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1"
+                className="w-full transition-all duration-300 focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter your email"
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <label
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
@@ -100,11 +107,14 @@ export const TeacherLogin = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1"
+                className="w-full transition-all duration-300 focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter your password"
               />
             </div>
-            <Button type="submit" className="w-full">
+            <Button 
+              type="submit" 
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105"
+            >
               Sign in
             </Button>
           </form>
