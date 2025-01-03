@@ -2,45 +2,46 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
 export const ResourcesPracticePage = () => {
-  const subjectGroups = {
-    "A Level": [
-      "Mathematics", "Physics", "Biology", "Chemistry", "English",
-      "Computer Science", "Economics", "Business Studies", "History", "Geography"
+  const examBoards = {
+    "A-Level": [
+      { name: "AQA", path: "aqa" },
+      { name: "CIE", path: "cie" }
     ],
-    "AS Level": [
-      "Mathematics", "Physics", "Biology", "Chemistry", "English",
-      "Computer Science", "Economics", "Business Studies"
+    "AP": [
+      { name: "College Board", path: "college-board" }
     ],
-    "IGCSE": [
-      "Mathematics", "Physics", "Biology", "Chemistry", "English",
-      "Computer Science", "Economics", "Business Studies", "History", "Geography"
+    "GCSE": [
+      { name: "AQA", path: "aqa" },
+      { name: "Edexcel", path: "edexcel" },
+      { name: "OCR", path: "ocr" }
     ]
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8 text-center">Practice Questions</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {Object.entries(subjectGroups).map(([level, subjects]) => (
-          <Card key={level} className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-primary">{level}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2">
-                {subjects.map((subject) => (
-                  <li
-                    key={subject}
-                    className="p-2 hover:bg-gray-100 rounded-md transition-colors cursor-pointer"
-                  >
-                    <Link to={`/resources/practice/${level.toLowerCase().replace(' ', '-')}/${subject.toLowerCase().replace(' ', '-')}`} className="text-gray-700">
-                      {subject}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
+      <div className="space-y-12">
+        {Object.entries(examBoards).map(([level, boards]) => (
+          <div key={level} className="space-y-4">
+            <h2 className="text-2xl font-semibold">{level}</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {boards.map((board) => (
+                <Card key={board.path} className="hover:shadow-lg transition-shadow bg-pink-50">
+                  <CardHeader className="p-4">
+                    <CardTitle className="text-lg font-medium">
+                      <Link 
+                        to={`/resources/practice/${level.toLowerCase()}/${board.path}`}
+                        className="flex items-center justify-between group"
+                      >
+                        <span className="text-sm">{level}</span>
+                        <span className="text-gray-600">{board.name}</span>
+                      </Link>
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </div>
