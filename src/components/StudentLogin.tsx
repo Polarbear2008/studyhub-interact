@@ -4,11 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Apple, Chrome } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 export const StudentLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +34,10 @@ export const StudentLogin = () => {
       description: "To implement secure Apple authentication, we recommend connecting to a backend service like Supabase. For now, this is just a demo.",
       duration: 5000,
     });
+  };
+
+  const handleTeacherRedirect = () => {
+    navigate('/teacher-login');
   };
 
   return (
@@ -113,6 +119,25 @@ export const StudentLogin = () => {
                 Sign in with Email
               </Button>
             </form>
+
+            <div className="relative mt-6">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-2 text-muted-foreground">
+                  Or
+                </span>
+              </div>
+            </div>
+
+            <Button
+              variant="outline"
+              className="w-full mt-4"
+              onClick={handleTeacherRedirect}
+            >
+              Login as a Teacher
+            </Button>
           </div>
         </CardContent>
       </Card>
