@@ -24,6 +24,12 @@ export const Navigation = () => {
     "Business Studies"
   ];
 
+  const resources = [
+    { name: "Notes", path: "/resources/notes" },
+    { name: "Practice Questions", path: "/resources/practice" },
+    { name: "Past Papers", path: "/resources/papers" }
+  ];
+
   return (
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,6 +56,26 @@ export const Navigation = () => {
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       {subject}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Resources Dropdown */}
+            <div className="relative group">
+              <button className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+                Resources
+              </button>
+              <div className="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="py-1">
+                  {resources.map((resource) => (
+                    <Link
+                      key={resource.name}
+                      to={resource.path}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      {resource.name}
                     </Link>
                   ))}
                 </div>
@@ -108,6 +134,27 @@ export const Navigation = () => {
                 </Link>
               ))}
             </div>
+
+            {/* Mobile Resources Menu */}
+            <div className="space-y-1">
+              <button
+                className="w-full text-left text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsOpen(false)}
+              >
+                Resources
+              </button>
+              {resources.map((resource) => (
+                <Link
+                  key={resource.name}
+                  to={resource.path}
+                  className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium pl-6"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {resource.name}
+                </Link>
+              ))}
+            </div>
+
             <Link
               to="/pricing"
               className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"

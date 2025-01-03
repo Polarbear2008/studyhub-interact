@@ -10,6 +10,9 @@ import { StudentLogin } from "./components/StudentLogin";
 import { TeacherSignup } from "./components/TeacherSignup";
 import { StudentSignup } from "./components/StudentSignup";
 import { SubjectsPage } from "./components/SubjectsPage";
+import { ResourcesNotesPage } from "./components/ResourcesNotesPage";
+import { ResourcesPracticePage } from "./components/ResourcesPracticePage";
+import { ResourcesPapersPage } from "./components/ResourcesPapersPage";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +28,9 @@ const App = () => (
           <Route path="/teacher-signup" element={<TeacherSignup />} />
           <Route path="/student-signup" element={<StudentSignup />} />
           <Route path="/subjects" element={<SubjectsPage />} />
+          <Route path="/resources/notes" element={<ResourcesNotesPage />} />
+          <Route path="/resources/practice" element={<ResourcesPracticePage />} />
+          <Route path="/resources/papers" element={<ResourcesPapersPage />} />
         </Routes>
       </BrowserRouter>
       <Toaster />
