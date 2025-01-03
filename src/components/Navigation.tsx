@@ -7,11 +7,21 @@ export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const subjects = [
-    "Mathematics",
-    "Science",
-    "English",
+    "AS & A Level Mathematics",
+    "AS & A Level Physics",
+    "AS & A Level Biology",
+    "AS & A Level Chemistry",
+    "AS & A Level English",
+    "IGCSE Mathematics",
+    "IGCSE Physics",
+    "IGCSE Biology",
+    "IGCSE Chemistry",
+    "IGCSE English",
     "History",
     "Geography",
+    "Computer Science",
+    "Economics",
+    "Business Studies"
   ];
 
   return (
@@ -26,12 +36,12 @@ export const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-4">
-            <div className="flex space-x-4">
+            <div className="flex flex-wrap gap-2">
               {subjects.map((subject) => (
                 <Link
                   key={subject}
-                  to={`/subjects/${subject.toLowerCase()}`}
-                  className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium"
+                  to={`/subjects/${subject.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap"
                 >
                   {subject}
                 </Link>
@@ -68,7 +78,7 @@ export const Navigation = () => {
             {subjects.map((subject) => (
               <Link
                 key={subject}
-                to={`/subjects/${subject.toLowerCase()}`}
+                to={`/subjects/${subject.toLowerCase().replace(/\s+/g, '-')}`}
                 className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsOpen(false)}
               >
