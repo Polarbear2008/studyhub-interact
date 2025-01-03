@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Apple, Chrome } from "lucide-react";
+import { Chrome, Facebook } from "lucide-react";
 
 export const StudentSignup = () => {
   const [email, setEmail] = useState("");
@@ -36,10 +36,10 @@ export const StudentSignup = () => {
     });
   };
 
-  const handleAppleSignup = () => {
+  const handleFacebookSignup = () => {
     toast({
-      title: "Apple Sign Up",
-      description: "To implement secure Apple authentication, we recommend connecting to a backend service like Supabase. For now, this is just a demo.",
+      title: "Facebook Sign Up",
+      description: "To implement secure Facebook authentication, we recommend connecting to a backend service like Supabase. For now, this is just a demo.",
       duration: 5000,
     });
   };
@@ -66,10 +66,10 @@ export const StudentSignup = () => {
               <Button
                 variant="outline"
                 className="w-full hover:bg-gray-100 transition-colors"
-                onClick={handleAppleSignup}
+                onClick={handleFacebookSignup}
               >
-                <Apple className="mr-2 h-4 w-4" />
-                Apple
+                <Facebook className="mr-2 h-4 w-4" />
+                Facebook
               </Button>
             </div>
             

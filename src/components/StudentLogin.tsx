@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Apple, Chrome } from "lucide-react";
+import { Chrome, Facebook } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export const StudentLogin = () => {
@@ -29,10 +29,10 @@ export const StudentLogin = () => {
     });
   };
 
-  const handleAppleLogin = () => {
+  const handleFacebookLogin = () => {
     toast({
-      title: "Apple Login",
-      description: "To implement secure Apple authentication, we recommend connecting to a backend service like Supabase. For now, this is just a demo.",
+      title: "Facebook Login",
+      description: "To implement secure Facebook authentication, we recommend connecting to a backend service like Supabase. For now, this is just a demo.",
       duration: 5000,
     });
   };
@@ -66,10 +66,10 @@ export const StudentLogin = () => {
               <Button
                 variant="outline"
                 className="w-full hover:bg-gray-50 transition-colors duration-300 transform hover:scale-105"
-                onClick={handleAppleLogin}
+                onClick={handleFacebookLogin}
               >
-                <Apple className="mr-2 h-4 w-4" />
-                Apple
+                <Facebook className="mr-2 h-4 w-4" />
+                Facebook
               </Button>
             </div>
             
