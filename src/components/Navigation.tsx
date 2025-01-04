@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import { AnimatedButton } from "@/components/ui/animated-button";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,7 +44,7 @@ export const Navigation = () => {
           <div className="hidden md:flex items-center space-x-6">
             <Link 
               to="/subjects" 
-              className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300"
+              className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium"
             >
               Subjects
             </Link>
@@ -52,7 +52,7 @@ export const Navigation = () => {
             {/* Resources Dropdown */}
             <div className="relative group">
               <button 
-                className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300"
+                className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium"
               >
                 Resources
               </button>
@@ -62,7 +62,7 @@ export const Navigation = () => {
                     <Link
                       key={resource.name}
                       to={resource.path}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       {resource.name}
                     </Link>
@@ -71,26 +71,21 @@ export const Navigation = () => {
               </div>
             </div>
 
-            <Link to="/pricing" className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300">
+            <Link to="/pricing" className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
               Pricing
             </Link>
-            
-            <Link to="/hire-tutor">
-              <AnimatedButton variant="outline" className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white border-none hover:opacity-90">
-                Find Tutor
-              </AnimatedButton>
+            <Link to="/hire-tutor" className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+              Hire Tutor
             </Link>
-            
             <Link to="/student-login">
-              <AnimatedButton variant="outline" className="hover:bg-gray-50">
+              <Button variant="outline" className="ml-4">
                 Login
-              </AnimatedButton>
+              </Button>
             </Link>
-            
             <Link to="/student-signup">
-              <AnimatedButton className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white hover:opacity-90">
+              <Button>
                 Sign Up
-              </AnimatedButton>
+              </Button>
             </Link>
           </div>
 
@@ -98,7 +93,7 @@ export const Navigation = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary transition-colors duration-200"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -112,7 +107,7 @@ export const Navigation = () => {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
               to="/subjects"
-              className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+              className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
               onClick={() => setIsOpen(false)}
             >
               Subjects
@@ -121,7 +116,7 @@ export const Navigation = () => {
             {/* Mobile Resources Menu */}
             <div className="space-y-1">
               <button
-                className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium w-full text-left transition-colors duration-200"
+                className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium w-full text-left"
               >
                 Resources
               </button>
@@ -129,7 +124,7 @@ export const Navigation = () => {
                 <Link
                   key={resource.name}
                   to={resource.path}
-                  className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium pl-6 transition-colors duration-200"
+                  className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium pl-6"
                   onClick={() => setIsOpen(false)}
                 >
                   {resource.name}
@@ -139,37 +134,35 @@ export const Navigation = () => {
 
             <Link
               to="/pricing"
-              className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+              className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
               onClick={() => setIsOpen(false)}
             >
               Pricing
             </Link>
             <Link
               to="/hire-tutor"
-              className="block px-3 py-2"
+              className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
               onClick={() => setIsOpen(false)}
             >
-              <AnimatedButton variant="outline" className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white border-none hover:opacity-90">
-                Find Tutor
-              </AnimatedButton>
+              Hire Tutor
             </Link>
             <Link
               to="/student-login"
               className="block px-3 py-2"
               onClick={() => setIsOpen(false)}
             >
-              <AnimatedButton variant="outline" className="w-full hover:bg-gray-50">
+              <Button variant="outline" className="w-full">
                 Login
-              </AnimatedButton>
+              </Button>
             </Link>
             <Link
               to="/student-signup"
               className="block px-3 py-2"
               onClick={() => setIsOpen(false)}
             >
-              <AnimatedButton className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white hover:opacity-90">
+              <Button className="w-full">
                 Sign Up
-              </AnimatedButton>
+              </Button>
             </Link>
           </div>
         </div>
