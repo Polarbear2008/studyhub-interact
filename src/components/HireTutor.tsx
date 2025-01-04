@@ -1,125 +1,152 @@
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Star } from "lucide-react";
-import { useState } from "react";
 import { SearchFilters } from "./hire-tutor/SearchFilters";
 import { TutorCard } from "./hire-tutor/TutorCard";
+import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
 
 export const HireTutor = () => {
-  const [selectedSubject, setSelectedSubject] = useState<string>("all");
-  const [selectedLevel, setSelectedLevel] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState("");
 
   const subjects = [
-    "All Subjects",
     "Mathematics",
     "Physics",
     "Chemistry",
     "Biology",
     "English",
-    "Computer Science"
+    "Computer Science",
+    "Economics",
+    "Business Studies",
   ];
 
-  const levels = [
-    "All Levels",
-    "A Level",
-    "AS Level",
-    "IGCSE",
-    "O Level"
-  ];
+  const levels = ["IGCSE", "AS Level", "A Level"];
 
   const featuredTutors = [
     {
-      name: "Dr. Sarah Mitchell",
-      image: "/lovable-uploads/6fad200d-56d6-4627-a36f-7a9bcc3fc156.png",
-      qualifications: "PhD in Physics | Cambridge University",
-      subjects: ["Physics", "Mathematics", "Chemistry"],
+      name: "Dr. Sarah Johnson",
+      image: "/placeholder.svg",
+      qualifications: "PhD in Mathematics, Cambridge University",
+      subjects: ["Mathematics", "Physics"],
       levels: ["A Level", "AS Level"],
       rating: 4.9,
       reviews: 127,
-      description: "Experienced tutor specializing in A-Level Physics and Mathematics. Passionate about making complex concepts accessible to all students.",
-      hourlyRate: "$50"
+      description: "Experienced tutor specializing in A-Level Mathematics and Physics with over 10 years of teaching experience.",
+      hourlyRate: "$50",
     },
     {
-      name: "Prof. James Wilson",
-      image: "/lovable-uploads/6fad200d-56d6-4627-a36f-7a9bcc3fc156.png",
-      qualifications: "MSc in Computer Science | Oxford University",
-      subjects: ["Computer Science", "Mathematics"],
-      levels: ["IGCSE", "A Level"],
+      name: "Prof. Michael Chen",
+      image: "/placeholder.svg",
+      qualifications: "MSc in Chemistry, Oxford University",
+      subjects: ["Chemistry", "Biology"],
+      levels: ["IGCSE", "AS Level"],
       rating: 4.8,
-      reviews: 98,
-      description: "Expert in Computer Science and Mathematics with 10+ years of teaching experience. Specializes in programming and algorithm design.",
-      hourlyRate: "$45"
-    }
+      reviews: 93,
+      description: "Dedicated science tutor with a passion for making complex concepts easy to understand.",
+      hourlyRate: "$45",
+    },
+    {
+      name: "Ms. Emily Davis",
+      image: "/placeholder.svg",
+      qualifications: "BSc in Computer Science, Stanford University",
+      subjects: ["Computer Science", "Mathematics"],
+      levels: ["A Level", "AS Level"],
+      rating: 4.7,
+      reviews: 85,
+      description: "Passionate about teaching programming and mathematics with a hands-on approach.",
+      hourlyRate: "$55",
+    },
+    {
+      name: "Mr. John Smith",
+      image: "/placeholder.svg",
+      qualifications: "MSc in Biology, Harvard University",
+      subjects: ["Biology", "Chemistry"],
+      levels: ["IGCSE", "AS Level"],
+      rating: 4.6,
+      reviews: 70,
+      description: "Experienced tutor with a focus on making biology engaging and accessible.",
+      hourlyRate: "$50",
+    },
   ];
 
-  const filteredTutors = featuredTutors.filter(tutor => {
-    const matchesSubject = selectedSubject === "all" || tutor.subjects.includes(selectedSubject);
-    const matchesLevel = selectedLevel === "all" || tutor.levels.includes(selectedLevel);
+  const filteredTutors = featuredTutors.filter((tutor) => {
     const matchesSearch = tutor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         tutor.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSubject && matchesLevel && matchesSearch;
+      tutor.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSubject = !selectedSubject || tutor.subjects.includes(selectedSubject);
+    const matchesLevel = !selectedLevel || tutor.levels.includes(selectedLevel);
+    return matchesSearch && matchesSubject && matchesLevel;
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Find Your Perfect Tutor
-        </h1>
-        <p className="text-xl text-gray-600 mb-6">
-          Connect with experienced tutors who can help you excel in your studies.
-          Personalized learning at your fingertips.
-        </p>
-        <div className="flex justify-center gap-4 mb-8">
-          <div className="flex items-center gap-2">
-            <div className="flex">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star key={star} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-              ))}
+      <div className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 py-16 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Find Your Perfect Tutor
+          </h1>
+          <p className="text-xl text-white/90 max-w-2xl mx-auto">
+            Connect with experienced tutors who can help you excel in your studies
+          </p>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <Tabs defaultValue="all" className="w-full">
+          <TabsList className="mb-8">
+            <TabsTrigger value="all">All Tutors</TabsTrigger>
+            <TabsTrigger value="featured">Featured</TabsTrigger>
+            <TabsTrigger value="new">New Tutors</TabsTrigger>
+          </TabsList>
+
+          <SearchFilters
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedSubject={selectedSubject}
+            setSelectedSubject={setSelectedSubject}
+            selectedLevel={selectedLevel}
+            setSelectedLevel={setSelectedLevel}
+            subjects={subjects}
+            levels={levels}
+          />
+
+          <Separator className="my-8" />
+
+          <TabsContent value="all" className="space-y-8">
+            {filteredTutors.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-500">No tutors found matching your criteria.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredTutors.map((tutor, index) => (
+                  <TutorCard key={index} tutor={tutor} />
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="featured">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredTutors
+                .filter(tutor => tutor.rating >= 4.8)
+                .map((tutor, index) => (
+                  <TutorCard key={index} tutor={tutor} />
+                ))}
             </div>
-            <span className="text-sm text-gray-600">
-              4.9/5 based on 500+ reviews
-            </span>
-          </div>
-        </div>
-      </div>
+          </TabsContent>
 
-      {/* Search and Filter Section */}
-      <SearchFilters
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        selectedSubject={selectedSubject}
-        setSelectedSubject={setSelectedSubject}
-        selectedLevel={selectedLevel}
-        setSelectedLevel={setSelectedLevel}
-        subjects={subjects}
-        levels={levels}
-      />
-
-      {/* Tutor Cards Section */}
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredTutors.map((tutor, index) => (
-            <TutorCard key={index} tutor={tutor} />
-          ))}
-        </div>
-      </div>
-
-      {/* Call to Action */}
-      <div className="max-w-7xl mx-auto mt-12 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          Ready to Start Teaching?
-        </h2>
-        <p className="text-gray-600 mb-8">
-          Join our community of professional tutors and help students achieve their academic goals.
-        </p>
-        <Link to="/teacher-signup">
-          <Button size="lg" className="px-8">
-            Become a Tutor
-          </Button>
-        </Link>
+          <TabsContent value="new">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredTutors
+                .slice(0, 3)
+                .map((tutor, index) => (
+                  <TutorCard key={index} tutor={tutor} />
+                ))}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
