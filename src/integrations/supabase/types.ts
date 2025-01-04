@@ -9,6 +9,112 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      quiz_attempts: {
+        Row: {
+          answers: Json
+          completed_at: string | null
+          id: string
+          quiz_id: string | null
+          score: number
+          user_id: string | null
+        }
+        Insert: {
+          answers: Json
+          completed_at?: string | null
+          id?: string
+          quiz_id?: string | null
+          score: number
+          user_id?: string | null
+        }
+        Update: {
+          answers?: Json
+          completed_at?: string | null
+          id?: string
+          quiz_id?: string | null
+          score?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_attempts_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_questions: {
+        Row: {
+          correct_answer: string
+          created_at: string | null
+          explanation: string | null
+          id: string
+          options: Json
+          order_number: number
+          question: string
+          quiz_id: string | null
+        }
+        Insert: {
+          correct_answer: string
+          created_at?: string | null
+          explanation?: string | null
+          id?: string
+          options: Json
+          order_number: number
+          question: string
+          quiz_id?: string | null
+        }
+        Update: {
+          correct_answer?: string
+          created_at?: string | null
+          explanation?: string | null
+          id?: string
+          options?: Json
+          order_number?: number
+          question?: string
+          quiz_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_questions_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quizzes: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          exam_board: string
+          id: string
+          level: string
+          subject: string
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          exam_board: string
+          id?: string
+          level: string
+          subject: string
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          exam_board?: string
+          id?: string
+          level?: string
+          subject?: string
+          title?: string
+        }
+        Relationships: []
+      }
       resources: {
         Row: {
           content_type: string
