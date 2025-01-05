@@ -55,8 +55,8 @@ export const HeroSection = () => {
             className="relative h-[500px] rounded-lg overflow-hidden shadow-2xl"
           >
             <img
-              src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
-              alt="Student studying with laptop"
+              src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45"
+              alt="Students studying in a classroom"
               className="w-full h-full object-cover rounded-lg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent" />
