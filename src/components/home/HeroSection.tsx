@@ -15,7 +15,7 @@ export const HeroSection = () => {
               transition={{ duration: 0.6 }}
               className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl"
             >
-              Ace Your Exams With Us
+              Supercharge Your Grades ⚡
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
