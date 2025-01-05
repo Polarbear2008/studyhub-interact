@@ -47,19 +47,38 @@ export const HeroSection = () => {
             </motion.div>
           </div>
 
-          {/* Image Section */}
+          {/* Image Grid Section */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="relative h-[500px] rounded-lg overflow-hidden shadow-2xl"
+            className="relative grid grid-cols-2 gap-4 h-[500px]"
           >
-            <img
-              src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45"
-              alt="Students studying in a classroom"
-              className="w-full h-full object-cover rounded-lg"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent" />
+            {/* Main Image */}
+            <div className="col-span-2 h-64 rounded-lg overflow-hidden shadow-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e"
+                alt="Student working on laptop"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            {/* Supporting Images */}
+            <div className="h-48 rounded-lg overflow-hidden shadow-xl">
+              <img
+                src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
+                alt="Study materials and laptop"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="h-48 rounded-lg overflow-hidden shadow-xl">
+              <img
+                src="https://images.unsplash.com/photo-1498050108023-c5249f4df085"
+                alt="Student workspace with notes"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent rounded-lg" />
           </motion.div>
         </div>
       </div>
