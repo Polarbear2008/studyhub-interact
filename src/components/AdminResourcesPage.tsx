@@ -5,15 +5,62 @@ import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
 import { Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const AdminResourcesPage = () => {
   const [resources, setResources] = useState<any[]>([]);
-  const { toast } = useToast();
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchResources();
+    checkAdminStatus();
   }, []);
+
+  const checkAdminStatus = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast({
+          title: "Unauthorized",
+          description: "Please log in to access this page",
+          variant: "destructive",
+        });
+        navigate("/student-login");
+        return;
+      }
+
+      const { data: roles } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id)
+        .eq('role', 'admin')
+        .single();
+
+      if (!roles) {
+        toast({
+          title: "Unauthorized",
+          description: "You don't have permission to access this page",
+          variant: "destructive",
+        });
+        navigate("/");
+        return;
+      }
+
+      setIsAdmin(true);
+      fetchResources();
+    } catch (error) {
+      console.error('Error checking admin status:', error);
+      toast({
+        title: "Error",
+        description: "Failed to verify admin status",
+        variant: "destructive",
+      });
+      navigate("/");
+    }
+  };
 
   const fetchResources = async () => {
     try {
@@ -70,6 +117,18 @@ export const AdminResourcesPage = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-6 flex items-center justify-center">
+        <p>Checking permissions...</p>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return null; // The user will be redirected by the useEffect
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-6">
       <div className="max-w-7xl mx-auto">
@@ -83,7 +142,7 @@ export const AdminResourcesPage = () => {
                 <CardTitle>Upload New Resource</CardTitle>
               </CardHeader>
               <CardContent>
-                <ResourceUploadForm />
+                <ResourceUploadForm onUploadSuccess={fetchResources} />
               </CardContent>
             </Card>
           </div>
@@ -96,9 +155,7 @@ export const AdminResourcesPage = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {isLoading ? (
-                    <p>Loading resources...</p>
-                  ) : resources.length === 0 ? (
+                  {resources.length === 0 ? (
                     <p>No resources found</p>
                   ) : (
                     resources.map((resource) => (

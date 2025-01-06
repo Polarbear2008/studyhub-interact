@@ -8,7 +8,11 @@ import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Upload } from "lucide-react";
 
-export const ResourceUploadForm = () => {
+interface ResourceUploadFormProps {
+  onUploadSuccess?: () => void;
+}
+
+export const ResourceUploadForm = ({ onUploadSuccess }: ResourceUploadFormProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [resourceType, setResourceType] = useState<string>("");
@@ -33,6 +37,16 @@ export const ResourceUploadForm = () => {
     try {
       setUploading(true);
 
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "You must be logged in to upload resources",
+          variant: "destructive",
+        });
+        return;
+      }
+
       // Upload file to Supabase Storage
       const fileExt = file.name.split('.').pop();
       const filePath = `${crypto.randomUUID()}.${fileExt}`;
@@ -55,6 +69,7 @@ export const ResourceUploadForm = () => {
           exam_board: examBoard,
           file_path: filePath,
           content_type: file.type,
+          created_by: session.user.id
         });
 
       if (dbError) throw dbError;
@@ -72,6 +87,11 @@ export const ResourceUploadForm = () => {
       setLevel("");
       setExamBoard("");
       setFile(null);
+
+      // Call the success callback if provided
+      if (onUploadSuccess) {
+        onUploadSuccess();
+      }
     } catch (error) {
       toast({
         title: "Error",
