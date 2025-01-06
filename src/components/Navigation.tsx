@@ -27,7 +27,8 @@ export const Navigation = () => {
   const resources = [
     { name: "Notes", path: "/resources/notes" },
     { name: "Practice Questions", path: "/resources/practice" },
-    { name: "Past Papers", path: "/resources/papers" }
+    { name: "Past Papers", path: "/resources/papers" },
+    { name: "Admin Resources", path: "/admin/resources", adminOnly: true }
   ];
 
   return (
