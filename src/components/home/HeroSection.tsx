@@ -57,16 +57,16 @@ export const HeroSection = () => {
             {/* Main Image */}
             <div className="col-span-2 h-64 rounded-lg overflow-hidden shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e"
-                alt="Student working on laptop"
+                src="https://images.unsplash.com/photo-1509228468518-180dd4864904"
+                alt="Mathematics formulas and calculations"
                 className="w-full h-full object-cover"
               />
             </div>
             {/* Supporting Images */}
             <div className="h-48 rounded-lg overflow-hidden shadow-xl">
               <img
-                src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
-                alt="Study materials and laptop"
+                src="https://images.unsplash.com/photo-1532094349884-543bc11b234d"
+                alt="Physics laboratory equipment"
                 className="w-full h-full object-cover"
               />
             </div>
