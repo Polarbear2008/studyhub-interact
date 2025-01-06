@@ -36,7 +36,7 @@ export const Navigation = () => {
         <div className="flex justify-between h-16">
           <div className="flex">
             <Link to="/" className="flex items-center">
-              <span className="text-2xl font-bold text-primary">EduHub</span>
+              <span className="text-2xl font-bold text-primary">Sir Michael</span>
             </Link>
           </div>
 
