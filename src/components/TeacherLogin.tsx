@@ -26,22 +26,6 @@ export const TeacherLogin = () => {
     });
   };
 
-  const handleGoogleLogin = () => {
-    toast({
-      title: "Google Login",
-      description: "To implement secure Google authentication, we recommend connecting to a backend service like Supabase. For now, this is just a demo.",
-      duration: 5000,
-    });
-  };
-
-  const handleFacebookLogin = () => {
-    toast({
-      title: "Facebook Login",
-      description: "To implement secure Facebook authentication, we recommend connecting to a backend service like Supabase. For now, this is just a demo.",
-      duration: 5000,
-    });
-  };
-
   const handleNoteUpload = (e: React.FormEvent) => {
     e.preventDefault();
     // In a real app, we would handle note upload here
@@ -104,10 +88,7 @@ export const TeacherLogin = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <SocialLogin
-              onGoogleLogin={handleGoogleLogin}
-              onFacebookLogin={handleFacebookLogin}
-            />
+            <SocialLogin />
 
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-2">
