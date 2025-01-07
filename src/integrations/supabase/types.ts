@@ -194,6 +194,7 @@ export type Database = {
           id: string
           level: string
           resource_type: string
+          scheduled_publish_date: string | null
           subject: string
           title: string
           updated_at: string | null
@@ -209,6 +210,7 @@ export type Database = {
           id?: string
           level: string
           resource_type: string
+          scheduled_publish_date?: string | null
           subject: string
           title: string
           updated_at?: string | null
@@ -224,6 +226,7 @@ export type Database = {
           id?: string
           level?: string
           resource_type?: string
+          scheduled_publish_date?: string | null
           subject?: string
           title?: string
           updated_at?: string | null
