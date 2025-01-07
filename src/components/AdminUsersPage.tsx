@@ -7,12 +7,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, UserCog, Shield } from "lucide-react";
 
+type UserRole = 'admin' | 'teacher' | 'student';
+
 export const AdminUsersPage = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
 
-  const handleRoleChange = async (userId: string, newRole: string) => {
+  const handleRoleChange = async (userId: string, newRole: UserRole) => {
     try {
       const { error } = await supabase
         .from('user_roles')
@@ -91,7 +93,7 @@ export const AdminUsersPage = () => {
                       <div className="flex items-center gap-4">
                         <Select
                           value={user.role}
-                          onValueChange={(value) => handleRoleChange(user.id, value)}
+                          onValueChange={(value: UserRole) => handleRoleChange(user.id, value)}
                         >
                           <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Select role" />

@@ -17,7 +17,10 @@ export const AdminSchedulingPage = () => {
     try {
       const { error } = await supabase
         .from('resources')
-        .update({ scheduled_publish_date: publishDate })
+        .update({ 
+          updated_at: new Date().toISOString(),
+          scheduled_publish_date: publishDate.toISOString()
+        })
         .eq('id', resourceId);
 
       if (error) throw error;
