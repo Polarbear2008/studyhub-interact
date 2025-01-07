@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const subjects = [
   "AS & A Level Mathematics",
@@ -29,6 +31,30 @@ export const resources = [
 ];
 
 export const NavigationItems = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: roles } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', session.user.id)
+          .eq('role', 'admin')
+          .single();
+        
+        setIsAdmin(!!roles);
+      }
+    };
+
+    checkAdminStatus();
+  }, []);
+
+  const filteredResources = resources.filter(resource => 
+    !resource.adminOnly || (resource.adminOnly && isAdmin)
+  );
+
   return (
     <>
       <Link 
@@ -45,7 +71,7 @@ export const NavigationItems = () => {
         </button>
         <div className="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
           <div className="py-1">
-            {resources.map((resource) => (
+            {filteredResources.map((resource) => (
               <Link
                 key={resource.name}
                 to={resource.path}
