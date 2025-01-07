@@ -17,11 +17,17 @@ export const ResourceRating = ({ resourceId, initialRating = 0, onRatingSubmit }
 
   const handleRating = async (selectedRating: number) => {
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('Not authenticated');
+      }
+
       const { error } = await supabase
         .from('resource_ratings')
         .upsert({
           resource_id: resourceId,
           rating: selectedRating,
+          user_id: session.user.id
         }, {
           onConflict: 'resource_id,user_id'
         });

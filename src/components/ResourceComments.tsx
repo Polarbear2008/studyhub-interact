@@ -11,9 +11,9 @@ interface Comment {
   created_at: string;
   user_id: string;
   profiles?: {
-    first_name: string;
-    last_name: string;
-  };
+    first_name: string | null;
+    last_name: string | null;
+  } | null;
 }
 
 interface ResourceCommentsProps {
@@ -33,11 +33,16 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
 
   const fetchComments = async () => {
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('Not authenticated');
+      }
+
       const { data, error } = await supabase
         .from('resource_comments')
         .select(`
           *,
-          profiles:profiles(first_name, last_name)
+          profiles (first_name, last_name)
         `)
         .eq('resource_id', resourceId)
         .order('created_at', { ascending: false });
@@ -61,11 +66,17 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
 
     setIsSubmitting(true);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('Not authenticated');
+      }
+
       const { error } = await supabase
         .from('resource_comments')
         .insert({
           resource_id: resourceId,
           content: newComment.trim(),
+          user_id: session.user.id
         });
 
       if (error) throw error;
