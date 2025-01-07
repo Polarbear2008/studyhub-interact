@@ -43,7 +43,10 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
       const { data, error } = await supabase
         .from('resource_comments')
         .select(`
-          *,
+          id,
+          content,
+          created_at,
+          user_id,
           profiles:user_id (
             first_name,
             last_name
