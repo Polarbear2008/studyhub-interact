@@ -48,12 +48,12 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="bg-white py-12 mt-16 border-t">
+    <footer className="bg-white py-8 mt-16 border-t">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Company Section */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Company</h3>
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Company</h3>
             <ul className="space-y-2">
               {company.map((item) => (
                 <li key={item.name}>
@@ -69,8 +69,8 @@ export const Footer = () => {
           </div>
 
           {/* Tutors Section */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Tutors</h3>
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Tutors</h3>
             <ul className="space-y-2">
               {tutors.map((item) => (
                 <li key={item.name}>
@@ -86,8 +86,8 @@ export const Footer = () => {
           </div>
 
           {/* Resources Section */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Resources</h3>
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Resources</h3>
             <ul className="space-y-2">
               {resources.map((item) => (
                 <li key={item.name}>
@@ -103,19 +103,19 @@ export const Footer = () => {
           </div>
 
           {/* Contact Section */}
-          <div>
-            <Link to="/" className="block mb-4">
+          <div className="space-y-6">
+            <Link to="/" className="block">
               <img
                 src="/lovable-uploads/34d657a1-cd67-49d6-b541-ac2dd86b032e.png"
                 alt="TutorChase"
                 className="h-8"
               />
             </Link>
-            <div className="space-y-2 mb-6">
+            <div className="space-y-2">
               <p className="text-gray-600">info@tutorchase.com</p>
               <p className="text-gray-600">+44 (0)1865 306636</p>
             </div>
-            <div className="flex space-x-4">
+            <div className="flex flex-wrap gap-4">
               <a
                 href="https://wa.me/message"
                 target="_blank"
@@ -157,7 +157,7 @@ export const Footer = () => {
                 <Linkedin className="h-6 w-6" />
               </a>
             </div>
-            <div className="mt-6 space-y-2">
+            <div className="space-y-2">
               <Link
                 to="/privacy"
                 className="block text-gray-600 hover:text-primary transition-colors"

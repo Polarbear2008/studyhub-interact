@@ -32,20 +32,20 @@ export const Navigation = () => {
   ];
 
   return (
-    <nav className="bg-white shadow-md">
+    <nav className="bg-white shadow-md relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex">
+          <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <span className="text-2xl font-bold text-primary">Sir Michael</span>
+              <span className="text-xl sm:text-2xl font-bold text-primary">Sir Michael</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-4 lg:space-x-6">
             <Link 
               to="/subjects" 
-              className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium"
+              className="text-gray-600 hover:text-primary px-2 py-2 rounded-md text-sm font-medium"
             >
               Subjects
             </Link>
@@ -53,7 +53,7 @@ export const Navigation = () => {
             {/* Resources Dropdown */}
             <div className="relative group">
               <button 
-                className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium"
+                className="text-gray-600 hover:text-primary px-2 py-2 rounded-md text-sm font-medium"
               >
                 Resources
               </button>
@@ -72,19 +72,19 @@ export const Navigation = () => {
               </div>
             </div>
 
-            <Link to="/pricing" className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+            <Link to="/pricing" className="text-gray-600 hover:text-primary px-2 py-2 rounded-md text-sm font-medium">
               Pricing
             </Link>
-            <Link to="/hire-tutor" className="text-gray-600 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+            <Link to="/hire-tutor" className="text-gray-600 hover:text-primary px-2 py-2 rounded-md text-sm font-medium">
               Hire Tutor
             </Link>
             <Link to="/student-login">
-              <Button variant="outline" className="ml-4">
+              <Button variant="outline" size="sm" className="hidden lg:inline-flex">
                 Login
               </Button>
             </Link>
             <Link to="/student-signup">
-              <Button>
+              <Button size="sm" className="hidden lg:inline-flex">
                 Sign Up
               </Button>
             </Link>
@@ -95,7 +95,9 @@ export const Navigation = () => {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+              aria-expanded="false"
             >
+              <span className="sr-only">Open main menu</span>
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
@@ -103,50 +105,50 @@ export const Navigation = () => {
       </div>
 
       {/* Mobile menu */}
-      {isOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link
-              to="/subjects"
-              className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
-              onClick={() => setIsOpen(false)}
-            >
-              Subjects
-            </Link>
+      <div className={`md:hidden absolute w-full bg-white z-50 shadow-lg transition-all duration-200 ease-in-out ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <Link
+            to="/subjects"
+            className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
+            onClick={() => setIsOpen(false)}
+          >
+            Subjects
+          </Link>
 
-            {/* Mobile Resources Menu */}
-            <div className="space-y-1">
-              <button
-                className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium w-full text-left"
+          {/* Mobile Resources Menu */}
+          <div className="space-y-1">
+            <button
+              className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium w-full text-left"
+            >
+              Resources
+            </button>
+            {resources.map((resource) => (
+              <Link
+                key={resource.name}
+                to={resource.path}
+                className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium pl-6"
+                onClick={() => setIsOpen(false)}
               >
-                Resources
-              </button>
-              {resources.map((resource) => (
-                <Link
-                  key={resource.name}
-                  to={resource.path}
-                  className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium pl-6"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {resource.name}
-                </Link>
-              ))}
-            </div>
+                {resource.name}
+              </Link>
+            ))}
+          </div>
 
-            <Link
-              to="/pricing"
-              className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
-              onClick={() => setIsOpen(false)}
-            >
-              Pricing
-            </Link>
-            <Link
-              to="/hire-tutor"
-              className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
-              onClick={() => setIsOpen(false)}
-            >
-              Hire Tutor
-            </Link>
+          <Link
+            to="/pricing"
+            className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
+            onClick={() => setIsOpen(false)}
+          >
+            Pricing
+          </Link>
+          <Link
+            to="/hire-tutor"
+            className="text-gray-600 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
+            onClick={() => setIsOpen(false)}
+          >
+            Hire Tutor
+          </Link>
+          <div className="pt-4 pb-3 border-t border-gray-200">
             <Link
               to="/student-login"
               className="block px-3 py-2"
@@ -167,7 +169,7 @@ export const Navigation = () => {
             </Link>
           </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 };
