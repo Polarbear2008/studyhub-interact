@@ -13,6 +13,7 @@ import { SubjectsPage } from "./components/SubjectsPage";
 import { ResourcesNotesPage } from "./components/ResourcesNotesPage";
 import { ResourcesPracticePage } from "./components/ResourcesPracticePage";
 import { ResourcesPapersPage } from "./components/ResourcesPapersPage";
+import { ResourcesPhysicsSimulationsPage } from "./components/ResourcesPhysicsSimulationsPage";
 import { HireTutor } from "./components/HireTutor";
 import { PricingPage } from "./components/PricingPage";
 import { AdminResourcesPage } from "./components/AdminResourcesPage";
@@ -56,6 +57,14 @@ const App = () => (
             element={
               <ProtectedRoute>
                 <ResourcesPapersPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/resources/practice/simulations/physics" 
+            element={
+              <ProtectedRoute>
+                <ResourcesPhysicsSimulationsPage />
               </ProtectedRoute>
             } 
           />

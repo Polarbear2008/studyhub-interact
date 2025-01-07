@@ -9,6 +9,39 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      profiles: {
+        Row: {
+          created_at: string | null
+          first_name: string | null
+          grade_level: string | null
+          id: string
+          last_name: string | null
+          school: string | null
+          subjects_of_interest: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          first_name?: string | null
+          grade_level?: string | null
+          id: string
+          last_name?: string | null
+          school?: string | null
+          subjects_of_interest?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          first_name?: string | null
+          grade_level?: string | null
+          id?: string
+          last_name?: string | null
+          school?: string | null
+          subjects_of_interest?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       quiz_attempts: {
         Row: {
           answers: Json
@@ -230,6 +263,104 @@ export type Database = {
           subject?: string
           title?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      study_recommendations: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_completed: boolean | null
+          recommendation_text: string
+          resource_id: string | null
+          subject: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_completed?: boolean | null
+          recommendation_text: string
+          resource_id?: string | null
+          subject: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_completed?: boolean | null
+          recommendation_text?: string
+          resource_id?: string | null
+          subject?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_recommendations_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      study_sessions: {
+        Row: {
+          created_at: string | null
+          duration_minutes: number
+          id: string
+          notes: string | null
+          subject: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          duration_minutes: number
+          id?: string
+          notes?: string | null
+          subject: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          duration_minutes?: number
+          id?: string
+          notes?: string | null
+          subject?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      study_streaks: {
+        Row: {
+          created_at: string | null
+          current_streak: number | null
+          id: string
+          last_study_date: string | null
+          longest_streak: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_streak?: number | null
+          id?: string
+          last_study_date?: string | null
+          longest_streak?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_streak?: number | null
+          id?: string
+          last_study_date?: string | null
+          longest_streak?: number | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
