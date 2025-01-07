@@ -15,7 +15,7 @@ interface Comment {
   content: string;
   created_at: string;
   user_id: string;
-  profiles?: Profile | null;
+  profiles: Profile;
 }
 
 interface ResourceCommentsProps {
@@ -53,7 +53,7 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setComments(data || []);
+      setComments(data as Comment[] || []);
     } catch (error) {
       console.error('Error fetching comments:', error);
       toast({
