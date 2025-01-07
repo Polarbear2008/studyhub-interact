@@ -3,13 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Chrome, Facebook, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { SocialLogin } from "./auth/SocialLogin";
+import { ForgotPassword } from "./auth/ForgotPassword";
 
 export const StudentLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -23,12 +26,8 @@ export const StudentLogin = () => {
 
       if (error) {
         if (error.message.includes('Invalid login credentials')) {
-          // Check if user exists but provided wrong password
-          const { data: userExists } = await supabase.auth.admin.listUsers({
-            filters: {
-              email: email
-            }
-          });
+          const { data: { users } } = await supabase.auth.admin.listUsers();
+          const userExists = users?.some(user => user.email === email);
 
           if (userExists) {
             toast({
@@ -104,9 +103,13 @@ export const StudentLogin = () => {
     }
   };
 
-  const handleTeacherRedirect = () => {
-    navigate('/teacher-login');
-  };
+  if (showForgotPassword) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
+        <ForgotPassword onBack={() => setShowForgotPassword(false)} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8 animate-fade-in">
@@ -121,35 +124,10 @@ export const StudentLogin = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <Button
-                variant="outline"
-                className="w-full hover:bg-gray-50 transition-colors duration-300 transform hover:scale-105"
-                onClick={handleGoogleLogin}
-              >
-                <Chrome className="mr-2 h-4 w-4" />
-                Google
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full hover:bg-gray-50 transition-colors duration-300 transform hover:scale-105"
-                onClick={handleFacebookLogin}
-              >
-                <Facebook className="mr-2 h-4 w-4" />
-                Facebook
-              </Button>
-            </div>
-            
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-muted-foreground">
-                  Or continue with email
-                </span>
-              </div>
-            </div>
+            <SocialLogin
+              onGoogleLogin={handleGoogleLogin}
+              onFacebookLogin={handleFacebookLogin}
+            />
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
@@ -183,7 +161,15 @@ export const StudentLogin = () => {
               </Button>
             </form>
 
-            <div className="mt-4 text-center">
+            <div className="mt-4 text-center space-y-4">
+              <Button
+                variant="link"
+                className="text-sm text-blue-600 hover:text-blue-500"
+                onClick={() => setShowForgotPassword(true)}
+              >
+                Forgot your password?
+              </Button>
+              
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{" "}
                 <a
@@ -209,7 +195,7 @@ export const StudentLogin = () => {
             <Button
               variant="outline"
               className="w-full mt-4 transition-all duration-300 transform hover:scale-105 hover:bg-gray-50"
-              onClick={handleTeacherRedirect}
+              onClick={() => navigate('/teacher-login')}
             >
               Login as a Teacher
             </Button>
