@@ -115,8 +115,76 @@ export type Database = {
         }
         Relationships: []
       }
+      resource_comments: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          resource_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          resource_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          resource_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resource_comments_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      resource_ratings: {
+        Row: {
+          created_at: string | null
+          id: string
+          rating: number
+          resource_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          rating: number
+          resource_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          rating?: number
+          resource_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resource_ratings_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       resources: {
         Row: {
+          category: Database["public"]["Enums"]["resource_category"]
           content_type: string
           created_at: string | null
           created_by: string | null
@@ -131,6 +199,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          category?: Database["public"]["Enums"]["resource_category"]
           content_type: string
           created_at?: string | null
           created_by?: string | null
@@ -145,6 +214,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          category?: Database["public"]["Enums"]["resource_category"]
           content_type?: string
           created_at?: string | null
           created_by?: string | null
@@ -189,6 +259,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      resource_category: "notes" | "practice_questions" | "past_papers"
       user_role: "admin" | "teacher" | "student"
     }
     CompositeTypes: {
