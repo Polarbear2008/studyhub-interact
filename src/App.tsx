@@ -16,6 +16,7 @@ import { ResourcesPapersPage } from "./components/ResourcesPapersPage";
 import { HireTutor } from "./components/HireTutor";
 import { PricingPage } from "./components/PricingPage";
 import { AdminResourcesPage } from "./components/AdminResourcesPage";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -31,12 +32,40 @@ const App = () => (
           <Route path="/teacher-signup" element={<TeacherSignup />} />
           <Route path="/student-signup" element={<StudentSignup />} />
           <Route path="/subjects" element={<SubjectsPage />} />
-          <Route path="/resources/notes" element={<ResourcesNotesPage />} />
-          <Route path="/resources/practice" element={<ResourcesPracticePage />} />
-          <Route path="/resources/papers" element={<ResourcesPapersPage />} />
+          <Route 
+            path="/resources/notes" 
+            element={
+              <ProtectedRoute>
+                <ResourcesNotesPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/resources/practice" 
+            element={
+              <ProtectedRoute>
+                <ResourcesPracticePage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/resources/papers" 
+            element={
+              <ProtectedRoute>
+                <ResourcesPapersPage />
+              </ProtectedRoute>
+            } 
+          />
           <Route path="/hire-tutor" element={<HireTutor />} />
           <Route path="/pricing" element={<PricingPage />} />
-          <Route path="/admin/resources" element={<AdminResourcesPage />} />
+          <Route 
+            path="/admin/resources" 
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminResourcesPage />
+              </ProtectedRoute>
+            } 
+          />
         </Routes>
       </BrowserRouter>
       <Toaster />
