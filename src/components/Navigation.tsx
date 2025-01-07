@@ -1,10 +1,46 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "Success",
+        description: "You have been logged out successfully",
+      });
+      navigate('/');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to log out",
+        variant: "destructive"
+      });
+    }
+  };
 
   const subjects = [
     "AS & A Level Mathematics",
@@ -78,16 +114,31 @@ export const Navigation = () => {
             <Link to="/hire-tutor" className="text-gray-600 hover:text-primary px-2 py-2 rounded-md text-sm font-medium">
               Hire Tutor
             </Link>
-            <Link to="/student-login">
-              <Button variant="outline" size="sm" className="hidden lg:inline-flex">
-                Login
+            
+            {!user ? (
+              <>
+                <Link to="/student-login">
+                  <Button variant="outline" size="sm" className="hidden lg:inline-flex">
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/student-signup">
+                  <Button size="sm" className="hidden lg:inline-flex">
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleLogout}
+                className="hidden lg:inline-flex items-center gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
               </Button>
-            </Link>
-            <Link to="/student-signup">
-              <Button size="sm" className="hidden lg:inline-flex">
-                Sign Up
-              </Button>
-            </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -148,26 +199,43 @@ export const Navigation = () => {
           >
             Hire Tutor
           </Link>
-          <div className="pt-4 pb-3 border-t border-gray-200">
-            <Link
-              to="/student-login"
-              className="block px-3 py-2"
-              onClick={() => setIsOpen(false)}
-            >
-              <Button variant="outline" className="w-full">
-                Login
+          
+          {!user ? (
+            <div className="pt-4 pb-3 border-t border-gray-200">
+              <Link
+                to="/student-login"
+                className="block px-3 py-2"
+                onClick={() => setIsOpen(false)}
+              >
+                <Button variant="outline" className="w-full">
+                  Login
+                </Button>
+              </Link>
+              <Link
+                to="/student-signup"
+                className="block px-3 py-2"
+                onClick={() => setIsOpen(false)}
+              >
+                <Button className="w-full">
+                  Sign Up
+                </Button>
+              </Link>
+            </div>
+          ) : (
+            <div className="pt-4 pb-3 border-t border-gray-200">
+              <Button
+                variant="outline"
+                className="w-full flex items-center justify-center gap-2"
+                onClick={() => {
+                  handleLogout();
+                  setIsOpen(false);
+                }}
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
               </Button>
-            </Link>
-            <Link
-              to="/student-signup"
-              className="block px-3 py-2"
-              onClick={() => setIsOpen(false)}
-            >
-              <Button className="w-full">
-                Sign Up
-              </Button>
-            </Link>
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </nav>
