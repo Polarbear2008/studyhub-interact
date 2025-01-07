@@ -21,9 +21,42 @@ export const StudentLogin = () => {
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes('Invalid login credentials')) {
+          // Check if user exists but provided wrong password
+          const { data: userExists } = await supabase.auth.admin.listUsers({
+            filters: {
+              email: email
+            }
+          });
 
-      navigate('/');
+          if (userExists) {
+            toast({
+              title: "Incorrect Password",
+              description: "The password you entered is incorrect. Please try again.",
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: "Account Not Found",
+              description: "No account found with this email. Would you like to sign up?",
+              action: (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate('/student-signup')}
+                >
+                  Sign Up
+                </Button>
+              ),
+            });
+          }
+        } else {
+          throw error;
+        }
+      } else {
+        navigate('/');
+      }
     } catch (error: any) {
       toast({
         title: "Error",
