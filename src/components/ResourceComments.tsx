@@ -56,7 +56,7 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setComments(data as Comment[] || []);
+      setComments(data as Comment[]);
     } catch (error) {
       console.error('Error fetching comments:', error);
       toast({
