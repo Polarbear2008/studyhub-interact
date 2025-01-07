@@ -22,7 +22,10 @@ export const resources = [
   { name: "Notes", path: "/resources/notes" },
   { name: "Practice Questions", path: "/resources/practice" },
   { name: "Past Papers", path: "/resources/papers" },
-  { name: "Admin Resources", path: "/admin/resources", adminOnly: true }
+  { name: "Admin Resources", path: "/admin/resources", adminOnly: true },
+  { name: "Content Scheduling", path: "/admin/scheduling", adminOnly: true },
+  { name: "Analytics", path: "/admin/analytics", adminOnly: true },
+  { name: "User Management", path: "/admin/users", adminOnly: true }
 ];
 
 export const NavigationItems = () => {

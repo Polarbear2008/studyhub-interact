@@ -16,6 +16,9 @@ import { ResourcesPapersPage } from "./components/ResourcesPapersPage";
 import { HireTutor } from "./components/HireTutor";
 import { PricingPage } from "./components/PricingPage";
 import { AdminResourcesPage } from "./components/AdminResourcesPage";
+import { AdminSchedulingPage } from "./components/AdminSchedulingPage";
+import { AdminAnalyticsPage } from "./components/AdminAnalyticsPage";
+import { AdminUsersPage } from "./components/AdminUsersPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -63,6 +66,30 @@ const App = () => (
             element={
               <ProtectedRoute requiredRole="admin">
                 <AdminResourcesPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/scheduling" 
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminSchedulingPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/analytics" 
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminAnalyticsPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/users" 
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminUsersPage />
               </ProtectedRoute>
             } 
           />
