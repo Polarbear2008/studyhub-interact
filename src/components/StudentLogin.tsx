@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Chrome, Facebook } from "lucide-react";
+import { Chrome, Facebook, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -80,10 +80,10 @@ export const StudentLogin = () => {
       <Card className="w-full max-w-md transform transition-all duration-300 hover:shadow-xl">
         <CardHeader className="space-y-2">
           <CardTitle className="text-center text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-            Student Login
+            Welcome Back!
           </CardTitle>
           <p className="text-center text-sm text-muted-foreground">
-            Welcome back! Please enter your details
+            Sign in to continue your learning journey
           </p>
         </CardHeader>
         <CardContent>
@@ -120,12 +120,6 @@ export const StudentLogin = () => {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email address
-                </label>
                 <Input
                   id="email"
                   type="email"
@@ -137,12 +131,6 @@ export const StudentLogin = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Password
-                </label>
                 <Input
                   id="password"
                   type="password"
@@ -157,9 +145,22 @@ export const StudentLogin = () => {
                 type="submit" 
                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105"
               >
-                Sign in with Email
+                Sign in
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </form>
+
+            <div className="mt-4 text-center">
+              <p className="text-sm text-muted-foreground">
+                Don't have an account?{" "}
+                <a
+                  href="/student-signup"
+                  className="font-medium text-blue-600 hover:text-blue-500"
+                >
+                  Sign up
+                </a>
+              </p>
+            </div>
 
             <div className="relative mt-6">
               <div className="absolute inset-0 flex items-center">
