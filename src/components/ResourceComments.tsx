@@ -44,7 +44,7 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
         .from('resource_comments')
         .select(`
           *,
-          profiles:id (
+          profiles:user_id (
             first_name,
             last_name
           )
