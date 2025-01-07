@@ -5,15 +5,17 @@ import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 
+interface Profile {
+  first_name: string | null;
+  last_name: string | null;
+}
+
 interface Comment {
   id: string;
   content: string;
   created_at: string;
   user_id: string;
-  profiles?: {
-    first_name: string | null;
-    last_name: string | null;
-  } | null;
+  profiles?: Profile | null;
 }
 
 interface ResourceCommentsProps {
@@ -42,7 +44,10 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
         .from('resource_comments')
         .select(`
           *,
-          profiles (first_name, last_name)
+          profiles:id (
+            first_name,
+            last_name
+          )
         `)
         .eq('resource_id', resourceId)
         .order('created_at', { ascending: false });
