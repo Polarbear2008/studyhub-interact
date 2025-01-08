@@ -20,6 +20,9 @@ import { AdminResourcesPage } from "./components/AdminResourcesPage";
 import { AdminSchedulingPage } from "./components/AdminSchedulingPage";
 import { AdminAnalyticsPage } from "./components/AdminAnalyticsPage";
 import { AdminUsersPage } from "./components/AdminUsersPage";
+import { PrivacyPolicy } from "./components/PrivacyPolicy";
+import { TermsConditions } from "./components/TermsConditions";
+import { Safeguarding } from "./components/Safeguarding";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -70,6 +73,9 @@ const App = () => (
           />
           <Route path="/hire-tutor" element={<HireTutor />} />
           <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsConditions />} />
+          <Route path="/safeguarding" element={<Safeguarding />} />
           <Route 
             path="/admin/resources" 
             element={

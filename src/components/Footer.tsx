@@ -22,26 +22,29 @@ const TikTokIcon = ({ className = "", size = 24 }) => (
 export const Footer = () => {
   const company = [
     { name: "Tutor Applications", path: "/teacher-signup" },
-    { name: "Business Partnerships", path: "/business" },
-    { name: "Corporate Tutoring", path: "/corporate" },
+    { 
+      name: "Business Partnerships", 
+      path: "/business",
+      description: "Partner with us to provide premium educational resources to your organization's members or employees."
+    },
+    { 
+      name: "Corporate Tutoring", 
+      path: "/corporate",
+      description: "Tailored tutoring solutions for businesses looking to upskill their workforce or provide educational benefits to employees' families."
+    },
   ];
 
   const tutors = [
     { name: "GCSE Tutors", path: "/tutors/gcse" },
     { name: "IGCSE Tutors", path: "/tutors/igcse" },
     { name: "A-Level Tutors", path: "/tutors/a-level" },
-    { name: "IB Tutors", path: "/tutors/ib" },
-    { name: "AP Tutors", path: "/tutors/ap" },
     { name: "Oxbridge Tutors", path: "/tutors/oxbridge" },
-    { name: "US Admissions Tutors", path: "/tutors/us-admissions" },
   ];
 
   const resources = [
     { name: "GCSE Resources", path: "/resources/gcse" },
     { name: "IGCSE Resources", path: "/resources/igcse" },
     { name: "A-Level Resources", path: "/resources/a-level" },
-    { name: "IB Resources", path: "/resources/ib" },
-    { name: "AP Resources", path: "/resources/ap" },
     { name: "Study Notes", path: "/resources/notes" },
     { name: "Practice Questions", path: "/resources/practice" },
     { name: "Past Papers", path: "/resources/papers" },
@@ -54,7 +57,7 @@ export const Footer = () => {
           {/* Company Section */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Company</h3>
-            <ul className="space-y-2">
+            <ul className="space-y-4">
               {company.map((item) => (
                 <li key={item.name}>
                   <Link
@@ -63,6 +66,9 @@ export const Footer = () => {
                   >
                     {item.name}
                   </Link>
+                  {item.description && (
+                    <p className="text-sm text-gray-500 mt-1">{item.description}</p>
+                  )}
                 </li>
               ))}
             </ul>
@@ -114,6 +120,9 @@ export const Footer = () => {
             <div className="space-y-2">
               <p className="text-gray-600">info@tutorchase.com</p>
               <p className="text-gray-600">+44 (0)1865 306636</p>
+              <p className="text-sm text-gray-500">
+                Office Hours: Mon-Fri 9am-6pm GMT
+              </p>
             </div>
             <div className="flex flex-wrap gap-4">
               <a
@@ -121,6 +130,7 @@ export const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:text-primary/80 transition-colors"
+                aria-label="WhatsApp"
               >
                 <MessageCircle className="h-6 w-6" />
               </a>
@@ -129,6 +139,7 @@ export const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:text-primary/80 transition-colors"
+                aria-label="Facebook"
               >
                 <Facebook className="h-6 w-6" />
               </a>
@@ -137,6 +148,7 @@ export const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:text-primary/80 transition-colors"
+                aria-label="Instagram"
               >
                 <Instagram className="h-6 w-6" />
               </a>
@@ -145,6 +157,7 @@ export const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:text-primary/80 transition-colors"
+                aria-label="TikTok"
               >
                 <TikTokIcon className="h-6 w-6" />
               </a>
@@ -153,6 +166,7 @@ export const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:text-primary/80 transition-colors"
+                aria-label="LinkedIn"
               >
                 <Linkedin className="h-6 w-6" />
               </a>
@@ -178,6 +192,9 @@ export const Footer = () => {
               </Link>
             </div>
           </div>
+        </div>
+        <div className="mt-8 pt-8 border-t text-center text-sm text-gray-500">
+          <p>© {new Date().getFullYear()} Sir Michael. All rights reserved.</p>
         </div>
       </div>
     </footer>
