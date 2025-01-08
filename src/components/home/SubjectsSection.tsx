@@ -9,24 +9,28 @@ const subjects = [
     description: "From algebra to calculus, master core mathematical concepts",
     icon: Calculator,
     gradient: "from-blue-500 via-blue-400 to-blue-300",
+    path: "/subjects/mathematics"
   },
   {
     title: "Physics",
     description: "Explore the fundamental laws that govern our universe",
     icon: Microscope,
     gradient: "from-purple-500 via-purple-400 to-purple-300",
+    path: "/subjects/physics"
   },
   {
     title: "Chemistry",
     description: "Discover the science of matter and its transformations",
     icon: Book,
     gradient: "from-green-500 via-green-400 to-green-300",
+    path: "/subjects/chemistry"
   },
   {
     title: "Biology",
     description: "Understand life processes and living organisms",
     icon: Brain,
     gradient: "from-red-500 via-red-400 to-red-300",
+    path: "/subjects/biology"
   },
 ];
 
@@ -46,7 +50,7 @@ export const SubjectsSection = () => {
               transition={{ duration: 0.6, delay: index * 0.2 }}
             >
               <Link
-                to={`/subjects/${subject.title.toLowerCase()}`}
+                to={subject.path}
                 className="group block"
               >
                 <Card className="h-full transition-all hover:shadow-xl">

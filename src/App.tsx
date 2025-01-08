@@ -10,6 +10,10 @@ import { StudentLogin } from "./components/StudentLogin";
 import { TeacherSignup } from "./components/TeacherSignup";
 import { StudentSignup } from "./components/StudentSignup";
 import { SubjectsPage } from "./components/SubjectsPage";
+import { MathematicsPage } from "./components/subjects/MathematicsPage";
+import { PhysicsPage } from "./components/subjects/PhysicsPage";
+import { ChemistryPage } from "./components/subjects/ChemistryPage";
+import { BiologyPage } from "./components/subjects/BiologyPage";
 import { ResourcesNotesPage } from "./components/ResourcesNotesPage";
 import { ResourcesPracticePage } from "./components/ResourcesPracticePage";
 import { ResourcesPapersPage } from "./components/ResourcesPapersPage";
@@ -39,6 +43,10 @@ const App = () => (
           <Route path="/teacher-signup" element={<TeacherSignup />} />
           <Route path="/student-signup" element={<StudentSignup />} />
           <Route path="/subjects" element={<SubjectsPage />} />
+          <Route path="/subjects/mathematics" element={<MathematicsPage />} />
+          <Route path="/subjects/physics" element={<PhysicsPage />} />
+          <Route path="/subjects/chemistry" element={<ChemistryPage />} />
+          <Route path="/subjects/biology" element={<BiologyPage />} />
           <Route 
             path="/resources/notes" 
             element={
