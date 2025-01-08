@@ -24,6 +24,7 @@ import { AdminResourcesPage } from "./components/AdminResourcesPage";
 import { AdminSchedulingPage } from "./components/AdminSchedulingPage";
 import { AdminAnalyticsPage } from "./components/AdminAnalyticsPage";
 import { AdminUsersPage } from "./components/AdminUsersPage";
+import { TeacherApplicationsPage } from "./components/admin/TeacherApplicationsPage";
 import { PrivacyPolicy } from "./components/PrivacyPolicy";
 import { TermsConditions } from "./components/TermsConditions";
 import { Safeguarding } from "./components/Safeguarding";
@@ -113,6 +114,14 @@ const App = () => (
             element={
               <ProtectedRoute requiredRole="admin">
                 <AdminUsersPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/applications" 
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <TeacherApplicationsPage />
               </ProtectedRoute>
             } 
           />

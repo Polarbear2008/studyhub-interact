@@ -364,6 +364,48 @@ export type Database = {
         }
         Relationships: []
       }
+      teacher_applications: {
+        Row: {
+          bio: string | null
+          created_at: string | null
+          email: string
+          experience_years: number
+          full_name: string
+          id: string
+          qualifications: string
+          status: Database["public"]["Enums"]["application_status"] | null
+          subjects: string[]
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string | null
+          email: string
+          experience_years: number
+          full_name: string
+          id?: string
+          qualifications: string
+          status?: Database["public"]["Enums"]["application_status"] | null
+          subjects: string[]
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string | null
+          email?: string
+          experience_years?: number
+          full_name?: string
+          id?: string
+          qualifications?: string
+          status?: Database["public"]["Enums"]["application_status"] | null
+          subjects?: string[]
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -393,6 +435,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      application_status: "pending" | "approved" | "rejected"
       resource_category: "notes" | "practice_questions" | "past_papers"
       user_role: "admin" | "teacher" | "student"
     }
