@@ -47,16 +47,20 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
           content,
           created_at,
           user_id,
-          profiles:user_id (
-            first_name,
-            last_name
-          )
+          profiles:profiles(first_name, last_name)
         `)
         .eq('resource_id', resourceId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setComments(data as Comment[]);
+      
+      // Transform the data to match the Comment interface
+      const transformedComments = data.map(comment => ({
+        ...comment,
+        profiles: comment.profiles || { first_name: null, last_name: null }
+      }));
+      
+      setComments(transformedComments);
     } catch (error) {
       console.error('Error fetching comments:', error);
       toast({
