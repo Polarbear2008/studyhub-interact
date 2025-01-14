@@ -14,8 +14,7 @@ interface Comment {
   content: string;
   created_at: string;
   user_id: string;
-  profiles: Profile | null;
-  profile?: Profile;
+  profile: Profile;
 }
 
 interface ResourceCommentsProps {
@@ -35,7 +34,7 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
           content,
           created_at,
           user_id,
-          profiles!resource_comments_user_id_fkey (
+          profiles (
             first_name,
             last_name
           )
