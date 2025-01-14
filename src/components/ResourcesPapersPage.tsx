@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "react-router-dom";
 import { FileText, Download, Loader2 } from "lucide-react";
 import { BackButton } from "@/components/ui/back-button";
 import { supabase } from "@/integrations/supabase/client";
@@ -37,6 +36,7 @@ export const ResourcesPapersPage = () => {
 
   const fetchPapers = async () => {
     try {
+      setLoading(true);
       let query = supabase
         .from('past_papers')
         .select('*')
@@ -54,13 +54,22 @@ export const ResourcesPapersPage = () => {
         .order('season')
         .order('paper_number');
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching papers:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load past papers. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       setPapers(data || []);
     } catch (error) {
-      console.error('Error fetching papers:', error);
+      console.error('Error in fetchPapers:', error);
       toast({
         title: "Error",
-        description: "Failed to load past papers",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -74,9 +83,10 @@ export const ResourcesPapersPage = () => {
         .from('educational_resources')
         .download(paper.file_path);
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
-      // Create a download link
       const url = URL.createObjectURL(data);
       const a = document.createElement('a');
       a.href = url;
@@ -89,7 +99,7 @@ export const ResourcesPapersPage = () => {
       console.error('Error downloading paper:', error);
       toast({
         title: "Error",
-        description: "Failed to download paper",
+        description: "Failed to download paper. Please try again.",
         variant: "destructive",
       });
     }
