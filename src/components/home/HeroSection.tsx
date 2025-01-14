@@ -57,23 +57,23 @@ export const HeroSection = () => {
             {/* Main Image */}
             <div className="col-span-2 h-64 rounded-lg overflow-hidden shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1509228468518-180dd4864904"
-                alt="Mathematics formulas and calculations"
+                src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                alt="Student studying with textbooks and digital devices"
                 className="w-full h-full object-cover"
               />
             </div>
             {/* Supporting Images */}
             <div className="h-48 rounded-lg overflow-hidden shadow-xl">
               <img
-                src="https://images.unsplash.com/photo-1532094349884-543bc11b234d"
-                alt="Physics laboratory equipment"
+                src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                alt="Chemistry laboratory experiment"
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="h-48 rounded-lg overflow-hidden shadow-xl">
               <img
-                src="https://images.unsplash.com/photo-1498050108023-c5249f4df085"
-                alt="Student workspace with notes"
+                src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                alt="Modern classroom with interactive whiteboard"
                 className="w-full h-full object-cover"
               />
             </div>
