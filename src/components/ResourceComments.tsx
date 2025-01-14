@@ -3,7 +3,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { CommentForm } from "./comments/CommentForm";
 import { CommentList } from "./comments/CommentList";
-import { fetchResourceComments } from "@/lib/comments";
 
 interface Profile {
   first_name: string | null;
@@ -15,7 +14,8 @@ interface Comment {
   content: string;
   created_at: string;
   user_id: string;
-  profile: Profile;
+  profiles: Profile | null;
+  profile?: Profile;
 }
 
 interface ResourceCommentsProps {
