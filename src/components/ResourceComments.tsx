@@ -3,6 +3,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { CommentForm } from "./comments/CommentForm";
 import { CommentList } from "./comments/CommentList";
+import { fetchResourceComments } from "@/lib/comments";
 
 interface Profile {
   first_name: string | null;
@@ -34,11 +35,9 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
           content,
           created_at,
           user_id,
-          user:user_id (
-            profile:profiles (
-              first_name,
-              last_name
-            )
+          profiles!resource_comments_user_id_fkey (
+            first_name,
+            last_name
           )
         `)
         .eq('resource_id', resourceId)
@@ -50,8 +49,8 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
         const formattedComments = data.map(comment => ({
           ...comment,
           profile: {
-            first_name: comment.user?.profile?.first_name || null,
-            last_name: comment.user?.profile?.last_name || null
+            first_name: comment.profiles?.first_name || null,
+            last_name: comment.profiles?.last_name || null
           }
         }));
 
