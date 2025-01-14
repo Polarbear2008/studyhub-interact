@@ -57,13 +57,13 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
 
       if (error) throw error;
       
-      // Transform the data to match the Comment interface
-      const transformedComments = data.map(comment => ({
-        ...comment,
-        profiles: comment.profiles || { first_name: null, last_name: null }
-      }));
-      
-      setComments(transformedComments);
+      if (data) {
+        const transformedComments: Comment[] = data.map(comment => ({
+          ...comment,
+          profiles: comment.profiles as Profile || { first_name: null, last_name: null }
+        }));
+        setComments(transformedComments);
+      }
     } catch (error) {
       console.error('Error fetching comments:', error);
       toast({
