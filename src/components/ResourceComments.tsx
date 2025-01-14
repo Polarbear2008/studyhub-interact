@@ -34,7 +34,7 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
           content,
           created_at,
           user_id,
-          profile:profiles!resource_comments_user_id_fkey (
+          profiles!resource_comments_user_id_fkey (
             first_name,
             last_name
           )
@@ -46,7 +46,10 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
 
       const formattedComments = data.map(comment => ({
         ...comment,
-        profile: comment.profile as Profile
+        profile: {
+          first_name: comment.profiles?.first_name || null,
+          last_name: comment.profiles?.last_name || null
+        }
       }));
 
       setComments(formattedComments);
