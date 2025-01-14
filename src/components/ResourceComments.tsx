@@ -47,7 +47,10 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
           content,
           created_at,
           user_id,
-          profiles:profiles(first_name, last_name)
+          profiles!resource_comments_user_id_fkey (
+            first_name,
+            last_name
+          )
         `)
         .eq('resource_id', resourceId)
         .order('created_at', { ascending: false });
