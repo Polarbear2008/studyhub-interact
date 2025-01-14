@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Download, Loader2 } from "lucide-react";
+import { FileText, Download, Loader2, Download as DownloadIcon } from "lucide-react";
 import { BackButton } from "@/components/ui/back-button";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ export const ResourcesPapersPage = () => {
   const [selectedBoard, setSelectedBoard] = useState<string>("all");
   const [selectedSubject, setSelectedSubject] = useState<string>("all");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [scraping, setScraping] = useState(false);
   const { toast } = useToast();
 
   const examBoards = ["AQA", "CIE", "Edexcel", "OCR"];
@@ -91,6 +92,47 @@ export const ResourcesPapersPage = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const scrapePapers = async () => {
+    if (selectedBoard === 'all' || selectedSubject === 'all') {
+      toast({
+        title: "Error",
+        description: "Please select a specific exam board and subject to scrape",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      setScraping(true);
+      const { data, error } = await supabase.functions.invoke('scrape-cambridge-papers', {
+        body: {
+          subject: selectedSubject,
+          level: selectedLevel,
+          examBoard: selectedBoard
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: `Successfully scraped ${data.count} papers`,
+      });
+
+      // Refresh the papers list
+      fetchPapers();
+    } catch (error) {
+      console.error('Error scraping papers:', error);
+      toast({
+        title: "Error",
+        description: "Failed to scrape papers. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setScraping(false);
     }
   };
 
@@ -168,6 +210,26 @@ export const ResourcesPapersPage = () => {
             <option key={subject} value={subject}>{subject}</option>
           ))}
         </select>
+
+        {isAdmin && (
+          <Button 
+            onClick={scrapePapers} 
+            disabled={scraping || selectedBoard === 'all' || selectedSubject === 'all'}
+            className="flex items-center gap-2"
+          >
+            {scraping ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Scraping...
+              </>
+            ) : (
+              <>
+                <DownloadIcon className="h-4 w-4" />
+                Scrape Papers
+              </>
+            )}
+          </Button>
+        )}
       </div>
 
       {loading ? (
