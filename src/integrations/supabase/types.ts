@@ -53,7 +53,10 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
           created_at: string | null
+          description: string | null
+          field_of_study: string | null
           first_name: string | null
           grade_level: string | null
           id: string
@@ -63,7 +66,10 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          avatar_url?: string | null
           created_at?: string | null
+          description?: string | null
+          field_of_study?: string | null
           first_name?: string | null
           grade_level?: string | null
           id: string
@@ -73,7 +79,10 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          avatar_url?: string | null
           created_at?: string | null
+          description?: string | null
+          field_of_study?: string | null
           first_name?: string | null
           grade_level?: string | null
           id?: string
