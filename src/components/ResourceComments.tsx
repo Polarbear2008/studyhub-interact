@@ -14,7 +14,6 @@ interface Comment {
   content: string;
   created_at: string;
   user_id: string;
-  profile: Profile;
 }
 
 interface ResourceCommentsProps {
@@ -33,11 +32,7 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
           id,
           content,
           created_at,
-          user_id,
-          profiles (
-            first_name,
-            last_name
-          )
+          user_id
         `)
         .eq('resource_id', resourceId)
         .order('created_at', { ascending: false });
@@ -45,15 +40,7 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
       if (error) throw error;
 
       if (data) {
-        const formattedComments = data.map(comment => ({
-          ...comment,
-          profile: {
-            first_name: comment.profiles?.first_name || null,
-            last_name: comment.profiles?.last_name || null
-          }
-        }));
-
-        setComments(formattedComments);
+        setComments(data);
       }
     } catch (error) {
       console.error('Error fetching comments:', error);
