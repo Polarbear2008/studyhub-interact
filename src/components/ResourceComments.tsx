@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2 } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
 interface Profile {
   first_name: string | null;
@@ -15,7 +16,7 @@ interface Comment {
   content: string;
   created_at: string;
   user_id: string;
-  profiles: Profile;
+  profile: Profile;
 }
 
 interface ResourceCommentsProps {
@@ -25,21 +26,11 @@ interface ResourceCommentsProps {
 export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-
-  useEffect(() => {
-    fetchComments();
-  }, [resourceId]);
 
   const fetchComments = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        throw new Error('Not authenticated');
-      }
-
       const { data, error } = await supabase
         .from('resource_comments')
         .select(`
@@ -56,14 +47,16 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      
-      if (data) {
-        const transformedComments: Comment[] = data.map(comment => ({
-          ...comment,
-          profiles: comment.profiles as Profile || { first_name: null, last_name: null }
-        }));
-        setComments(transformedComments);
-      }
+
+      const formattedComments = data.map(comment => ({
+        id: comment.id,
+        content: comment.content,
+        created_at: comment.created_at,
+        user_id: comment.user_id,
+        profile: comment.profiles as Profile
+      }));
+
+      setComments(formattedComments);
     } catch (error) {
       console.error('Error fetching comments:', error);
       toast({
@@ -71,26 +64,31 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
         description: "Failed to load comments",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const handleSubmitComment = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!newComment.trim()) return;
 
-    setIsSubmitting(true);
     try {
+      setLoading(true);
       const { data: { session } } = await supabase.auth.getSession();
+      
       if (!session) {
-        throw new Error('Not authenticated');
+        toast({
+          title: "Error",
+          description: "You must be logged in to comment",
+          variant: "destructive",
+        });
+        return;
       }
 
       const { error } = await supabase
         .from('resource_comments')
         .insert({
-          resource_id: resourceId,
           content: newComment.trim(),
+          resource_id: resourceId,
           user_id: session.user.id
         });
 
@@ -99,67 +97,61 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
       setNewComment("");
       fetchComments();
       toast({
-        title: "Comment posted",
-        description: "Your comment has been posted successfully",
+        title: "Success",
+        description: "Comment added successfully",
       });
     } catch (error) {
-      console.error('Error posting comment:', error);
+      console.error('Error adding comment:', error);
       toast({
         title: "Error",
-        description: "Failed to post comment",
+        description: "Failed to add comment",
         variant: "destructive",
       });
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center p-4">
-        <Loader2 className="h-6 w-6 animate-spin" />
-      </div>
-    );
-  }
+  useEffect(() => {
+    fetchComments();
+  }, [resourceId]);
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
+    <div className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <Textarea
-          placeholder="Add a comment..."
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
+          placeholder="Add a comment..."
           className="min-h-[100px]"
         />
-        <Button 
-          onClick={handleSubmitComment}
-          disabled={isSubmitting || !newComment.trim()}
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Posting...
-            </>
-          ) : (
-            'Post Comment'
-          )}
+        <Button type="submit" disabled={loading}>
+          {loading ? "Posting..." : "Post Comment"}
         </Button>
-      </div>
+      </form>
 
       <div className="space-y-4">
         {comments.map((comment) => (
-          <div key={comment.id} className="bg-white p-4 rounded-lg shadow">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm font-medium text-gray-900">
-                  {comment.profiles?.first_name} {comment.profiles?.last_name}
-                </p>
-                <p className="text-sm text-gray-500">
-                  {new Date(comment.created_at).toLocaleDateString()}
-                </p>
+          <div key={comment.id} className="flex space-x-4 p-4 bg-white rounded-lg shadow-sm">
+            <Avatar>
+              <AvatarFallback>
+                {comment.profile?.first_name?.[0] || 'U'}
+                {comment.profile?.last_name?.[0] || 'U'}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <h4 className="font-semibold">
+                  {comment.profile?.first_name
+                    ? `${comment.profile.first_name} ${comment.profile.last_name || ''}`
+                    : 'Anonymous User'}
+                </h4>
+                <span className="text-sm text-gray-500">
+                  {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
+                </span>
               </div>
+              <p className="mt-1 text-gray-700">{comment.content}</p>
             </div>
-            <p className="mt-2 text-gray-700">{comment.content}</p>
           </div>
         ))}
       </div>
