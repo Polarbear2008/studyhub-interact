@@ -47,7 +47,7 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
           content,
           created_at,
           user_id,
-          profiles!resource_comments_user_id_fkey (
+          profiles:user_id (
             first_name,
             last_name
           )
