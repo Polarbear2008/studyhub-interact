@@ -42,13 +42,17 @@ export const TeacherApplicationsPage = () => {
   };
 
   const handleUpdateStatus = async (applicationId: string, newStatus: 'approved' | 'rejected') => {
-    const { error } = await supabase
+    const application = applications.find(app => app.id === applicationId);
+    if (!application) return;
+
+    // Start a transaction
+    const { error: updateError } = await supabase
       .from('teacher_applications')
       .update({ status: newStatus })
       .eq('id', applicationId);
 
-    if (error) {
-      console.error('Error updating application:', error);
+    if (updateError) {
+      console.error('Error updating application:', updateError);
       toast({
         title: "Error",
         description: "Failed to update application status",
@@ -57,32 +61,52 @@ export const TeacherApplicationsPage = () => {
       return;
     }
 
+    if (newStatus === 'approved') {
+      // Add to approved tutors
+      const { error: tutorError } = await supabase
+        .from('approved_tutors')
+        .insert({
+          user_id: application.id,
+          name: application.full_name,
+          qualifications: application.qualifications,
+          subjects: application.subjects,
+          levels: ['IGCSE', 'AS Level', 'A Level'], // Default to all levels
+          description: application.bio || `Experienced tutor with ${application.experience_years} years of teaching experience.`,
+          hourly_rate: 50 // Default hourly rate
+        });
+
+      if (tutorError) {
+        console.error('Error adding approved tutor:', tutorError);
+        toast({
+          title: "Warning",
+          description: "Application approved but failed to add to tutors list",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Set user role to teacher
+      const { error: roleError } = await supabase
+        .from('user_roles')
+        .upsert({
+          user_id: application.id,
+          role: 'teacher'
+        });
+
+      if (roleError) {
+        console.error('Error setting teacher role:', roleError);
+        toast({
+          title: "Warning",
+          description: "Application approved but failed to set teacher role",
+          variant: "destructive",
+        });
+      }
+    }
+
     toast({
       title: "Success",
       description: `Application ${newStatus} successfully`,
     });
-
-    // If approved, set user role to teacher
-    if (newStatus === 'approved') {
-      const application = applications.find(app => app.id === applicationId);
-      if (application) {
-        const { error: roleError } = await supabase
-          .from('user_roles')
-          .upsert({
-            user_id: application.id,
-            role: 'teacher'
-          });
-
-        if (roleError) {
-          console.error('Error setting teacher role:', roleError);
-          toast({
-            title: "Warning",
-            description: "Application approved but failed to set teacher role",
-            variant: "destructive",
-          });
-        }
-      }
-    }
 
     // Refresh applications list
     fetchApplications();

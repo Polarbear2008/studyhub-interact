@@ -1,13 +1,31 @@
 import { SearchFilters } from "./hire-tutor/SearchFilters";
 import { TutorCard } from "./hire-tutor/TutorCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
+
+interface Tutor {
+  id: string;
+  name: string;
+  image: string;
+  qualifications: string;
+  subjects: string[];
+  levels: string[];
+  rating: number;
+  reviews: number;
+  description: string;
+  hourly_rate: number;
+}
 
 export const HireTutor = () => {
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("");
+  const [tutors, setTutors] = useState<Tutor[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const subjects = [
     "Mathematics",
@@ -22,65 +40,34 @@ export const HireTutor = () => {
 
   const levels = ["IGCSE", "AS Level", "A Level"];
 
-  const featuredTutors = [
-    {
-      name: "Dr. Sarah Johnson",
-      image: "/placeholder.svg",
-      qualifications: "PhD in Mathematics, Cambridge University",
-      subjects: ["Mathematics", "Physics"],
-      levels: ["A Level", "AS Level"],
-      rating: 4.9,
-      reviews: 127,
-      description: "Experienced tutor specializing in A-Level Mathematics and Physics with over 10 years of teaching experience.",
-      hourlyRate: "$50",
-    },
-    {
-      name: "Prof. Michael Chen",
-      image: "/placeholder.svg",
-      qualifications: "MSc in Chemistry, Oxford University",
-      subjects: ["Chemistry", "Biology"],
-      levels: ["IGCSE", "AS Level"],
-      rating: 4.8,
-      reviews: 93,
-      description: "Dedicated science tutor with a passion for making complex concepts easy to understand.",
-      hourlyRate: "$45",
-    },
-    {
-      name: "Ms. Emily Davis",
-      image: "/placeholder.svg",
-      qualifications: "BSc in Computer Science, Stanford University",
-      subjects: ["Computer Science", "Mathematics"],
-      levels: ["A Level", "AS Level"],
-      rating: 4.7,
-      reviews: 85,
-      description: "Passionate about teaching programming and mathematics with a hands-on approach.",
-      hourlyRate: "$55",
-    },
-    {
-      name: "Mr. John Smith",
-      image: "/placeholder.svg",
-      qualifications: "MSc in Biology, Harvard University",
-      subjects: ["Biology", "Chemistry"],
-      levels: ["IGCSE", "AS Level"],
-      rating: 4.6,
-      reviews: 70,
-      description: "Experienced tutor with a focus on making biology engaging and accessible.",
-      hourlyRate: "$50",
-    },
-    {
-      name: "Dr. Amanda Thompson",
-      image: "/placeholder.svg",
-      qualifications: "PhD in Economics, London School of Economics",
-      subjects: ["Economics", "Business Studies"],
-      levels: ["A Level", "AS Level", "IGCSE"],
-      rating: 4.9,
-      reviews: 112,
-      description: "Expert in economics and business studies with a track record of helping students achieve top grades.",
-      hourlyRate: "$60",
-    }
-  ];
+  useEffect(() => {
+    fetchTutors();
+  }, []);
 
-  const filteredTutors = featuredTutors.filter((tutor) => {
+  const fetchTutors = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('approved_tutors')
+        .select('*');
+
+      if (error) {
+        throw error;
+      }
+
+      setTutors(data || []);
+    } catch (error) {
+      console.error('Error fetching tutors:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load tutors. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const filteredTutors = tutors.filter((tutor) => {
     const matchesSearch = tutor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       tutor.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesSubject = !selectedSubject || tutor.subjects.includes(selectedSubject);
@@ -125,14 +112,24 @@ export const HireTutor = () => {
           <Separator className="my-8" />
 
           <TabsContent value="all" className="space-y-8">
-            {filteredTutors.length === 0 ? (
+            {isLoading ? (
+              <div className="text-center py-8">
+                <p className="text-gray-500">Loading tutors...</p>
+              </div>
+            ) : filteredTutors.length === 0 ? (
               <div className="text-center py-8">
                 <p className="text-gray-500">No tutors found matching your criteria.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredTutors.map((tutor, index) => (
-                  <TutorCard key={index} tutor={tutor} />
+                {filteredTutors.map((tutor) => (
+                  <TutorCard 
+                    key={tutor.id} 
+                    tutor={{
+                      ...tutor,
+                      hourlyRate: `$${tutor.hourly_rate}`
+                    }} 
+                  />
                 ))}
               </div>
             )}
@@ -140,20 +137,32 @@ export const HireTutor = () => {
 
           <TabsContent value="featured">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredTutors
+              {filteredTutors
                 .filter(tutor => tutor.rating >= 4.8)
-                .map((tutor, index) => (
-                  <TutorCard key={index} tutor={tutor} />
+                .map((tutor) => (
+                  <TutorCard 
+                    key={tutor.id} 
+                    tutor={{
+                      ...tutor,
+                      hourlyRate: `$${tutor.hourly_rate}`
+                    }} 
+                  />
                 ))}
             </div>
           </TabsContent>
 
           <TabsContent value="new">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredTutors
+              {filteredTutors
                 .slice(0, 3)
-                .map((tutor, index) => (
-                  <TutorCard key={index} tutor={tutor} />
+                .map((tutor) => (
+                  <TutorCard 
+                    key={tutor.id} 
+                    tutor={{
+                      ...tutor,
+                      hourlyRate: `$${tutor.hourly_rate}`
+                    }} 
+                  />
                 ))}
             </div>
           </TabsContent>
