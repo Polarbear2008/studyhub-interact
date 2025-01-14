@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BackButton } from "@/components/ui/back-button";
 
 export const ResourcesPhysicsSimulationsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -80,6 +81,7 @@ export const ResourcesPhysicsSimulationsPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <BackButton />
       <h1 className="text-3xl font-bold text-center mb-8">Physics Interactive Simulations</h1>
       
       <Tabs defaultValue="mechanics" className="space-y-8">

@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { PenTool, BookOpen, Activity, LineChart } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BackButton } from "@/components/ui/back-button";
 
 export const ResourcesPracticePage = () => {
   const examBoards = {
@@ -75,6 +76,7 @@ export const ResourcesPracticePage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 bg-gradient-to-br from-emerald-50 to-teal-50">
+      <BackButton />
       <h1 className="text-4xl font-bold mb-8 text-center text-emerald-900">Interactive Practice</h1>
       
       <Tabs defaultValue="quizzes" className="space-y-8">

@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 import { ResourceRating } from "./ResourceRating";
 import { ResourceComments } from "./ResourceComments";
+import { BackButton } from "@/components/ui/back-button";
 
 interface Resource {
   id: string;
@@ -58,6 +59,7 @@ export const ResourcesNotesPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <BackButton />
       <h1 className="text-3xl font-bold mb-8">Study Notes</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {resources.map((resource) => (

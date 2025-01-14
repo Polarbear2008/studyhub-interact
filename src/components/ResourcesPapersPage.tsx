@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { FileText } from "lucide-react";
+import { BackButton } from "@/components/ui/back-button";
 
 export const ResourcesPapersPage = () => {
   const examBoards = {
@@ -74,6 +75,7 @@ export const ResourcesPapersPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 bg-gradient-to-br from-amber-50 to-orange-50">
+      <BackButton />
       <h1 className="text-4xl font-bold mb-8 text-center text-orange-900">Past Papers</h1>
       <div className="space-y-12">
         {Object.entries(examBoards).map(([level, boards]) => (
