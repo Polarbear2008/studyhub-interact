@@ -34,9 +34,11 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
           content,
           created_at,
           user_id,
-          profiles (
-            first_name,
-            last_name
+          user:user_id (
+            profile:profiles (
+              first_name,
+              last_name
+            )
           )
         `)
         .eq('resource_id', resourceId)
@@ -48,8 +50,8 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
         const formattedComments = data.map(comment => ({
           ...comment,
           profile: {
-            first_name: comment.profiles?.first_name || null,
-            last_name: comment.profiles?.last_name || null
+            first_name: comment.user?.profile?.first_name || null,
+            last_name: comment.user?.profile?.last_name || null
           }
         }));
 
