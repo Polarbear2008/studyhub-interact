@@ -1,120 +1,183 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { FileText } from "lucide-react";
+import { FileText, Download, Loader2 } from "lucide-react";
 import { BackButton } from "@/components/ui/back-button";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+
+interface PastPaper {
+  id: string;
+  title: string;
+  subject: string;
+  level: string;
+  exam_board: string;
+  year: number;
+  season: string;
+  paper_number: number;
+  file_path: string;
+}
 
 export const ResourcesPapersPage = () => {
-  const examBoards = {
-    "A-Level": [
-      { 
-        name: "AQA", 
-        path: "aqa",
-        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
-      },
-      { 
-        name: "CIE", 
-        path: "cie",
-        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
-      },
-      { 
-        name: "Edexcel", 
-        path: "edexcel",
-        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
-      },
-      { 
-        name: "OCR", 
-        path: "ocr",
-        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+  const [papers, setPapers] = useState<PastPaper[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedLevel, setSelectedLevel] = useState<string>("A-Level");
+  const [selectedBoard, setSelectedBoard] = useState<string>("all");
+  const [selectedSubject, setSelectedSubject] = useState<string>("all");
+  const { toast } = useToast();
+
+  const examBoards = ["AQA", "CIE", "Edexcel", "OCR"];
+  const subjects = ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"];
+  const levels = ["A-Level", "AS-Level", "IGCSE"];
+
+  useEffect(() => {
+    fetchPapers();
+  }, [selectedLevel, selectedBoard, selectedSubject]);
+
+  const fetchPapers = async () => {
+    try {
+      let query = supabase
+        .from('past_papers')
+        .select('*')
+        .eq('level', selectedLevel);
+
+      if (selectedBoard !== 'all') {
+        query = query.eq('exam_board', selectedBoard);
       }
-    ],
-    "AS-Level": [
-      { 
-        name: "AQA", 
-        path: "aqa",
-        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
-      },
-      { 
-        name: "CIE", 
-        path: "cie",
-        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
-      },
-      { 
-        name: "Edexcel", 
-        path: "edexcel",
-        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
-      },
-      { 
-        name: "OCR", 
-        path: "ocr",
-        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
+      if (selectedSubject !== 'all') {
+        query = query.eq('subject', selectedSubject);
       }
-    ],
-    "IGCSE": [
-      { 
-        name: "AQA", 
-        path: "aqa",
-        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
-      },
-      { 
-        name: "CIE", 
-        path: "cie",
-        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
-      },
-      { 
-        name: "Edexcel", 
-        path: "edexcel",
-        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
-      },
-      { 
-        name: "OCR", 
-        path: "ocr",
-        subjects: ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"]
-      }
-    ]
+
+      const { data, error } = await query
+        .order('year', { ascending: false })
+        .order('season')
+        .order('paper_number');
+
+      if (error) throw error;
+      setPapers(data || []);
+    } catch (error) {
+      console.error('Error fetching papers:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load past papers",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const downloadPaper = async (paper: PastPaper) => {
+    try {
+      const { data, error } = await supabase.storage
+        .from('educational_resources')
+        .download(paper.file_path);
+
+      if (error) throw error;
+
+      // Create a download link
+      const url = URL.createObjectURL(data);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${paper.title}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading paper:', error);
+      toast({
+        title: "Error",
+        description: "Failed to download paper",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
     <div className="container mx-auto px-4 py-8 bg-gradient-to-br from-amber-50 to-orange-50">
       <BackButton />
       <h1 className="text-4xl font-bold mb-8 text-center text-orange-900">Past Papers</h1>
-      <div className="space-y-12">
-        {Object.entries(examBoards).map(([level, boards]) => (
-          <div key={level} className="space-y-4">
-            <h2 className="text-2xl font-semibold text-orange-800">{level}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {boards.map((board) => (
-                <Card key={board.path} className="group relative overflow-hidden transform transition-all duration-300 hover:shadow-2xl bg-white border-orange-100">
-                  <div className="absolute inset-0 bg-gradient-to-r from-orange-500/0 via-orange-500/0 to-orange-500/0 group-hover:from-orange-500/5 group-hover:via-orange-500/5 group-hover:to-orange-500/5 transition-all duration-300" />
-                  <CardHeader className="p-6">
-                    <CardTitle className="text-lg font-medium">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <FileText className="h-6 w-6 text-orange-600" />
-                          <div>
-                            <div className="text-orange-900 font-bold">{board.name}</div>
-                            <div className="text-sm text-orange-600/80">{level}</div>
-                          </div>
-                        </div>
-                      </div>
-                    </CardTitle>
-                    <div className="mt-4 space-y-2 relative z-10">
-                      {board.subjects.map((subject) => (
-                        <Link
-                          key={subject}
-                          to={`/resources/papers/${level.toLowerCase()}/${board.path}/${subject.toLowerCase()}`}
-                          className="block p-2 text-sm text-orange-700 hover:bg-orange-50 rounded-md transition-colors"
-                        >
-                          {subject}
-                        </Link>
-                      ))}
-                    </div>
-                  </CardHeader>
-                </Card>
-              ))}
-            </div>
-          </div>
-        ))}
+
+      <div className="mb-8 flex flex-wrap gap-4 justify-center">
+        <select
+          className="px-4 py-2 rounded-md border border-orange-200 bg-white"
+          value={selectedLevel}
+          onChange={(e) => setSelectedLevel(e.target.value)}
+        >
+          {levels.map((level) => (
+            <option key={level} value={level}>{level}</option>
+          ))}
+        </select>
+
+        <select
+          className="px-4 py-2 rounded-md border border-orange-200 bg-white"
+          value={selectedBoard}
+          onChange={(e) => setSelectedBoard(e.target.value)}
+        >
+          <option value="all">All Exam Boards</option>
+          {examBoards.map((board) => (
+            <option key={board} value={board}>{board}</option>
+          ))}
+        </select>
+
+        <select
+          className="px-4 py-2 rounded-md border border-orange-200 bg-white"
+          value={selectedSubject}
+          onChange={(e) => setSelectedSubject(e.target.value)}
+        >
+          <option value="all">All Subjects</option>
+          {subjects.map((subject) => (
+            <option key={subject} value={subject}>{subject}</option>
+          ))}
+        </select>
       </div>
+
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin text-orange-600" />
+        </div>
+      ) : papers.length === 0 ? (
+        <div className="text-center text-gray-600">
+          No papers found for the selected criteria
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {papers.map((paper) => (
+            <Card key={paper.id} className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-start justify-between">
+                  <div className="flex items-start space-x-3">
+                    <FileText className="h-5 w-5 text-orange-600 mt-1" />
+                    <div>
+                      <div className="text-lg font-semibold text-orange-900">
+                        {paper.subject} - Paper {paper.paper_number}
+                      </div>
+                      <div className="text-sm text-orange-600">
+                        {paper.exam_board} {paper.level}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {paper.season} {paper.year}
+                      </div>
+                    </div>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Button
+                  variant="outline"
+                  className="w-full mt-2"
+                  onClick={() => downloadPaper(paper)}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

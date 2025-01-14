@@ -9,6 +9,48 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      past_papers: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          exam_board: string
+          file_path: string
+          id: string
+          level: string
+          paper_number: number
+          season: string
+          subject: string
+          title: string
+          year: number
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          exam_board: string
+          file_path: string
+          id?: string
+          level: string
+          paper_number: number
+          season: string
+          subject: string
+          title: string
+          year: number
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          exam_board?: string
+          file_path?: string
+          id?: string
+          level?: string
+          paper_number?: number
+          season?: string
+          subject?: string
+          title?: string
+          year?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
