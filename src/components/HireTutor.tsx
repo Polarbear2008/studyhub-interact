@@ -67,6 +67,17 @@ export const HireTutor = () => {
       description: "Experienced tutor with a focus on making biology engaging and accessible.",
       hourlyRate: "$50",
     },
+    {
+      name: "Dr. Amanda Thompson",
+      image: "/placeholder.svg",
+      qualifications: "PhD in Economics, London School of Economics",
+      subjects: ["Economics", "Business Studies"],
+      levels: ["A Level", "AS Level", "IGCSE"],
+      rating: 4.9,
+      reviews: 112,
+      description: "Expert in economics and business studies with a track record of helping students achieve top grades.",
+      hourlyRate: "$60",
+    }
   ];
 
   const filteredTutors = featuredTutors.filter((tutor) => {
