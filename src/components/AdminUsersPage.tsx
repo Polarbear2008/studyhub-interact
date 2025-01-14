@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -6,13 +6,44 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, UserCog, Shield } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 type UserRole = 'admin' | 'teacher' | 'student';
 
+interface UserWithRole {
+  id: string;
+  email: string;
+  created_at: string;
+  role?: UserRole;
+}
+
 export const AdminUsersPage = () => {
-  const [users, setUsers] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  // Fetch users and their roles
+  const { data: users = [], isLoading } = useQuery({
+    queryKey: ['users'],
+    queryFn: async () => {
+      const { data: { users }, error: authError } = await supabase.auth.admin.listUsers();
+      if (authError) throw authError;
+
+      // Get roles for all users
+      const { data: roles, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('user_id, role');
+      if (rolesError) throw rolesError;
+
+      // Combine user data with roles
+      return users.map(user => ({
+        id: user.id,
+        email: user.email,
+        created_at: user.created_at,
+        role: roles?.find(r => r.user_id === user.id)?.role || 'student'
+      })) as UserWithRole[];
+    }
+  });
 
   const handleRoleChange = async (userId: string, newRole: UserRole) => {
     try {
@@ -27,6 +58,9 @@ export const AdminUsersPage = () => {
 
       if (error) throw error;
 
+      // Invalidate and refetch users query
+      await queryClient.invalidateQueries({ queryKey: ['users'] });
+
       toast({
         title: "Success",
         description: "User role updated successfully",
@@ -40,6 +74,10 @@ export const AdminUsersPage = () => {
       });
     }
   };
+
+  const filteredUsers = users.filter(user => 
+    user.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-6">
@@ -56,12 +94,11 @@ export const AdminUsersPage = () => {
           <CardContent>
             <div className="flex gap-4">
               <Input
-                placeholder="Search by name or email..."
+                placeholder="Search by email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1"
               />
-              <Button>Search</Button>
             </div>
           </CardContent>
         </Card>
@@ -76,10 +113,12 @@ export const AdminUsersPage = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {users.length === 0 ? (
+                {isLoading ? (
+                  <p className="text-gray-500">Loading users...</p>
+                ) : filteredUsers.length === 0 ? (
                   <p className="text-gray-500">No users found</p>
                 ) : (
-                  users.map((user) => (
+                  filteredUsers.map((user) => (
                     <div
                       key={user.id}
                       className="flex items-center justify-between p-4 bg-white rounded-lg shadow"
