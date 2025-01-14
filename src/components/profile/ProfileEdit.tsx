@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,36 @@ export const ProfileEdit = () => {
     avatar_url: "",
   });
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (error) {
+          console.error('Error fetching profile:', error);
+          return;
+        }
+
+        if (data) {
+          setProfile({
+            first_name: data.first_name || "",
+            last_name: data.last_name || "",
+            field_of_study: data.field_of_study || "",
+            description: data.description || "",
+            avatar_url: data.avatar_url || "",
+          });
+        }
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       if (!e.target.files || e.target.files.length === 0) return;
@@ -31,17 +61,20 @@ export const ProfileEdit = () => {
       const fileExt = file.name.split('.').pop();
       const filePath = `${crypto.randomUUID()}.${fileExt}`;
 
+      // Upload the file to Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
+      // Get the public URL
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
         .getPublicUrl(filePath);
 
       setProfile(prev => ({ ...prev, avatar_url: publicUrl }));
+      
       toast({
         title: "Success",
         description: "Profile picture uploaded successfully",
@@ -63,6 +96,9 @@ export const ProfileEdit = () => {
     setLoading(true);
 
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No user found');
+
       const { error } = await supabase
         .from('profiles')
         .update({
@@ -72,7 +108,7 @@ export const ProfileEdit = () => {
           description: profile.description,
           avatar_url: profile.avatar_url,
         })
-        .eq('id', (await supabase.auth.getUser()).data.user?.id);
+        .eq('id', user.id);
 
       if (error) throw error;
 
