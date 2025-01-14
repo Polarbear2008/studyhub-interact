@@ -29,7 +29,7 @@ export const ResourcesPapersPage = () => {
   const { toast } = useToast();
 
   const examBoards = ["AQA", "CIE", "Edexcel", "OCR"];
-  const subjects = ["Mathematics", "Physics", "Chemistry", "Biology", "Computer Science"];
+  const subjects = ["Mathematics", "Physics", "Chemistry", "Biology"];
   const levels = ["A-Level", "AS-Level", "IGCSE"];
 
   useEffect(() => {
@@ -41,17 +41,22 @@ export const ResourcesPapersPage = () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        const { data: roles } = await supabase
+        const { data: roles, error } = await supabase
           .from('user_roles')
           .select('role')
           .eq('user_id', session.user.id)
           .eq('role', 'admin')
           .single();
 
+        if (error) {
+          console.error('Error checking admin status:', error);
+          return;
+        }
+
         setIsAdmin(!!roles);
       }
     } catch (error) {
-      console.error('Error checking admin status:', error);
+      console.error('Error in checkAdminStatus:', error);
     }
   };
 
@@ -75,22 +80,13 @@ export const ResourcesPapersPage = () => {
         .order('season')
         .order('paper_number');
 
-      if (error) {
-        console.error('Error fetching papers:', error);
-        toast({
-          title: "Error",
-          description: "Failed to load past papers. Please try again.",
-          variant: "destructive",
-        });
-        return;
-      }
-
+      if (error) throw error;
       setPapers(data || []);
     } catch (error) {
-      console.error('Error in fetchPapers:', error);
+      console.error('Error fetching papers:', error);
       toast({
         title: "Error",
-        description: "An unexpected error occurred. Please try again.",
+        description: "Failed to load past papers. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -104,9 +100,7 @@ export const ResourcesPapersPage = () => {
         .from('educational_resources')
         .download(paper.file_path);
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       const url = URL.createObjectURL(data);
       const a = document.createElement('a');
