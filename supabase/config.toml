@@ -13,5 +13,5 @@ enabled = true
 port = 54323
 
 [[functions]]
-name = "scrape-papers"
+[functions.scrape-papers]
 verify_jwt = true
