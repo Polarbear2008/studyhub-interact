@@ -4,11 +4,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { CommentForm } from "./comments/CommentForm";
 import { CommentList } from "./comments/CommentList";
 
-interface Profile {
-  first_name: string | null;
-  last_name: string | null;
-}
-
 interface Comment {
   id: string;
   content: string;
@@ -38,7 +33,6 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-
       if (data) {
         setComments(data);
       }

@@ -1,17 +1,11 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 
-interface Profile {
-  first_name: string | null;
-  last_name: string | null;
-}
-
 interface Comment {
   id: string;
   content: string;
   created_at: string;
   user_id: string;
-  profile: Profile;
 }
 
 interface CommentListProps {
@@ -25,16 +19,13 @@ export const CommentList = ({ comments }: CommentListProps) => {
         <div key={comment.id} className="flex space-x-4 p-4 bg-white rounded-lg shadow-sm">
           <Avatar>
             <AvatarFallback>
-              {comment.profile?.first_name?.[0] || 'U'}
-              {comment.profile?.last_name?.[0] || 'U'}
+              U
             </AvatarFallback>
           </Avatar>
           <div className="flex-1">
             <div className="flex items-center justify-between">
               <h4 className="font-semibold">
-                {comment.profile?.first_name
-                  ? `${comment.profile.first_name} ${comment.profile.last_name || ''}`
-                  : 'Anonymous User'}
+                User
               </h4>
               <span className="text-sm text-gray-500">
                 {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
