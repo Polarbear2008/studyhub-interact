@@ -29,7 +29,7 @@ export const TeacherApplicationsPage = () => {
   const checkAdminStatus = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      navigate('/login');
+      navigate('/student-login');
       return;
     }
 
