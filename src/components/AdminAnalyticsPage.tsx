@@ -1,20 +1,159 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Users, BookOpen, GraduationCap, Activity } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { format } from "date-fns";
 
 export const AdminAnalyticsPage = () => {
-  const userStats = [
-    { title: "Total Users", value: "1,234", icon: Users, change: "+12%" },
-    { title: "Active Students", value: "892", icon: GraduationCap, change: "+5%" },
-    { title: "Resources Accessed", value: "3,456", icon: BookOpen, change: "+18%" },
-    { title: "Quiz Completions", value: "567", icon: Activity, change: "+8%" },
-  ];
+  // Fetch total users count
+  const { data: totalUsers = 0 } = useQuery({
+    queryKey: ['totalUsers'],
+    queryFn: async () => {
+      const { count } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true });
+      return count || 0;
+    }
+  });
 
-  const monthlyData = [
-    { name: 'Jan', students: 65, resources: 45, quizzes: 30 },
-    { name: 'Feb', students: 75, resources: 55, quizzes: 40 },
-    { name: 'Mar', students: 85, resources: 65, quizzes: 50 },
-    { name: 'Apr', students: 95, resources: 75, quizzes: 60 },
+  // Fetch active students (users who have study sessions in the last 30 days)
+  const { data: activeStudents = 0 } = useQuery({
+    queryKey: ['activeStudents'],
+    queryFn: async () => {
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      
+      const { count } = await supabase
+        .from('study_sessions')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', thirtyDaysAgo.toISOString());
+      return count || 0;
+    }
+  });
+
+  // Fetch total resources accessed
+  const { data: resourcesAccessed = 0 } = useQuery({
+    queryKey: ['resourcesAccessed'],
+    queryFn: async () => {
+      const { count } = await supabase
+        .from('resource_ratings')
+        .select('*', { count: 'exact', head: true });
+      return count || 0;
+    }
+  });
+
+  // Fetch total quiz completions
+  const { data: quizCompletions = 0 } = useQuery({
+    queryKey: ['quizCompletions'],
+    queryFn: async () => {
+      const { count } = await supabase
+        .from('quiz_attempts')
+        .select('*', { count: 'exact', head: true });
+      return count || 0;
+    }
+  });
+
+  // Fetch monthly activity data
+  const { data: monthlyData = [] } = useQuery({
+    queryKey: ['monthlyActivity'],
+    queryFn: async () => {
+      const last4Months = Array.from({ length: 4 }, (_, i) => {
+        const date = new Date();
+        date.setMonth(date.getMonth() - i);
+        return format(date, 'MMM');
+      }).reverse();
+
+      const promises = last4Months.map(async (month) => {
+        const startOfMonth = new Date();
+        startOfMonth.setMonth(startOfMonth.getMonth() - last4Months.indexOf(month));
+        startOfMonth.setDate(1);
+        
+        const endOfMonth = new Date(startOfMonth);
+        endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+        endOfMonth.setDate(0);
+
+        const [studentsCount, resourcesCount, quizzesCount] = await Promise.all([
+          supabase
+            .from('profiles')
+            .select('*', { count: 'exact', head: true })
+            .gte('created_at', startOfMonth.toISOString())
+            .lt('created_at', endOfMonth.toISOString())
+            .then(({ count }) => count || 0),
+          supabase
+            .from('resources')
+            .select('*', { count: 'exact', head: true })
+            .gte('created_at', startOfMonth.toISOString())
+            .lt('created_at', endOfMonth.toISOString())
+            .then(({ count }) => count || 0),
+          supabase
+            .from('quiz_attempts')
+            .select('*', { count: 'exact', head: true })
+            .gte('created_at', startOfMonth.toISOString())
+            .lt('created_at', endOfMonth.toISOString())
+            .then(({ count }) => count || 0)
+        ]);
+
+        return {
+          name: month,
+          students: studentsCount,
+          resources: resourcesCount,
+          quizzes: quizzesCount
+        };
+      });
+
+      return Promise.all(promises);
+    }
+  });
+
+  // Fetch popular resources
+  const { data: popularResources = [] } = useQuery({
+    queryKey: ['popularResources'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('resources')
+        .select(`
+          id,
+          title,
+          subject,
+          resource_ratings (count)
+        `)
+        .limit(4)
+        .order('created_at', { ascending: false });
+
+      return data?.map(resource => ({
+        title: resource.title,
+        subject: resource.subject,
+        views: resource.resource_ratings?.[0]?.count || 0
+      })) || [];
+    }
+  });
+
+  const userStats = [
+    { 
+      title: "Total Users", 
+      value: totalUsers.toString(), 
+      icon: Users, 
+      change: "+12%" 
+    },
+    { 
+      title: "Active Students", 
+      value: activeStudents.toString(), 
+      icon: GraduationCap, 
+      change: "+5%" 
+    },
+    { 
+      title: "Resources Accessed", 
+      value: resourcesAccessed.toString(), 
+      icon: BookOpen, 
+      change: "+18%" 
+    },
+    { 
+      title: "Quiz Completions", 
+      value: quizCompletions.toString(), 
+      icon: Activity, 
+      change: "+8%" 
+    },
   ];
 
   return (
@@ -70,14 +209,14 @@ export const AdminAnalyticsPage = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {[1, 2, 3, 4].map((i) => (
+                {popularResources.map((resource, i) => (
                   <div key={i} className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Resource {i}</p>
-                      <p className="text-sm text-gray-500">Subject {i}</p>
+                      <p className="font-medium">{resource.title}</p>
+                      <p className="text-sm text-gray-500">{resource.subject}</p>
                     </div>
                     <div className="text-sm text-gray-500">
-                      {Math.floor(Math.random() * 1000)} views
+                      {resource.views} views
                     </div>
                   </div>
                 ))}
