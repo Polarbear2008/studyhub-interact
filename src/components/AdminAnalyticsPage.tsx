@@ -3,7 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Users, BookOpen, GraduationCap, Activity } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { format } from "date-fns";
+import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
 
 export const AdminAnalyticsPage = () => {
   // Fetch total users count
@@ -58,39 +58,35 @@ export const AdminAnalyticsPage = () => {
   const { data: monthlyData = [] } = useQuery({
     queryKey: ['monthlyActivity'],
     queryFn: async () => {
+      const currentDate = new Date();
       const last4Months = Array.from({ length: 4 }, (_, i) => {
-        const date = new Date();
-        date.setMonth(date.getMonth() - i);
-        return format(date, 'MMM');
+        const date = subMonths(currentDate, i);
+        return {
+          month: format(date, 'MMM'),
+          start: startOfMonth(date),
+          end: endOfMonth(date)
+        };
       }).reverse();
 
-      const promises = last4Months.map(async (month) => {
-        const startOfMonth = new Date();
-        startOfMonth.setMonth(startOfMonth.getMonth() - last4Months.indexOf(month));
-        startOfMonth.setDate(1);
-        
-        const endOfMonth = new Date(startOfMonth);
-        endOfMonth.setMonth(endOfMonth.getMonth() + 1);
-        endOfMonth.setDate(0);
-
+      const promises = last4Months.map(async ({ month, start, end }) => {
         const [studentsCount, resourcesCount, quizzesCount] = await Promise.all([
           supabase
             .from('profiles')
             .select('*', { count: 'exact', head: true })
-            .gte('created_at', startOfMonth.toISOString())
-            .lt('created_at', endOfMonth.toISOString())
+            .gte('created_at', start.toISOString())
+            .lt('created_at', end.toISOString())
             .then(({ count }) => count || 0),
           supabase
             .from('resources')
             .select('*', { count: 'exact', head: true })
-            .gte('created_at', startOfMonth.toISOString())
-            .lt('created_at', endOfMonth.toISOString())
+            .gte('created_at', start.toISOString())
+            .lt('created_at', end.toISOString())
             .then(({ count }) => count || 0),
           supabase
             .from('quiz_attempts')
             .select('*', { count: 'exact', head: true })
-            .gte('created_at', startOfMonth.toISOString())
-            .lt('created_at', endOfMonth.toISOString())
+            .gte('created_at', start.toISOString())
+            .lt('created_at', end.toISOString())
             .then(({ count }) => count || 0)
         ]);
 
@@ -227,4 +223,3 @@ export const AdminAnalyticsPage = () => {
       </div>
     </div>
   );
-};
