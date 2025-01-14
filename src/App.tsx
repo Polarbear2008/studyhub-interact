@@ -29,6 +29,7 @@ import { PrivacyPolicy } from "./components/PrivacyPolicy";
 import { TermsConditions } from "./components/TermsConditions";
 import { Safeguarding } from "./components/Safeguarding";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ProfileEdit } from "./components/profile/ProfileEdit";
 
 const queryClient = new QueryClient();
 
@@ -85,6 +86,14 @@ const App = () => (
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsConditions />} />
           <Route path="/safeguarding" element={<Safeguarding />} />
+          <Route 
+            path="/profile/edit" 
+            element={
+              <ProtectedRoute>
+                <ProfileEdit />
+              </ProtectedRoute>
+            } 
+          />
           <Route 
             path="/admin/resources" 
             element={
