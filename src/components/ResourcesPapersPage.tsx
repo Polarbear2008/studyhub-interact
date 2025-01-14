@@ -5,6 +5,7 @@ import { BackButton } from "@/components/ui/back-button";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { PastPaperUploadForm } from "./PastPaperUploadForm";
 
 interface PastPaper {
   id: string;
@@ -24,6 +25,7 @@ export const ResourcesPapersPage = () => {
   const [selectedLevel, setSelectedLevel] = useState<string>("A-Level");
   const [selectedBoard, setSelectedBoard] = useState<string>("all");
   const [selectedSubject, setSelectedSubject] = useState<string>("all");
+  const [isAdmin, setIsAdmin] = useState(false);
   const { toast } = useToast();
 
   const examBoards = ["AQA", "CIE", "Edexcel", "OCR"];
@@ -31,8 +33,27 @@ export const ResourcesPapersPage = () => {
   const levels = ["A-Level", "AS-Level", "IGCSE"];
 
   useEffect(() => {
+    checkAdminStatus();
     fetchPapers();
   }, [selectedLevel, selectedBoard, selectedSubject]);
+
+  const checkAdminStatus = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: roles } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', session.user.id)
+          .eq('role', 'admin')
+          .single();
+
+        setIsAdmin(!!roles);
+      }
+    } catch (error) {
+      console.error('Error checking admin status:', error);
+    }
+  };
 
   const fetchPapers = async () => {
     try {
@@ -109,6 +130,17 @@ export const ResourcesPapersPage = () => {
     <div className="container mx-auto px-4 py-8 bg-gradient-to-br from-amber-50 to-orange-50">
       <BackButton />
       <h1 className="text-4xl font-bold mb-8 text-center text-orange-900">Past Papers</h1>
+
+      {isAdmin && (
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Upload Past Paper</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <PastPaperUploadForm onUploadSuccess={fetchPapers} />
+          </CardContent>
+        </Card>
+      )}
 
       <div className="mb-8 flex flex-wrap gap-4 justify-center">
         <select
