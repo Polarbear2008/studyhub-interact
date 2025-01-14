@@ -27,7 +27,8 @@ export const resources = [
   { name: "Admin Resources", path: "/admin/resources", adminOnly: true },
   { name: "Content Scheduling", path: "/admin/scheduling", adminOnly: true },
   { name: "Analytics", path: "/admin/analytics", adminOnly: true },
-  { name: "User Management", path: "/admin/users", adminOnly: true }
+  { name: "User Management", path: "/admin/users", adminOnly: true },
+  { name: "Teacher Applications", path: "/admin/applications", adminOnly: true }
 ];
 
 export const NavigationItems = () => {
