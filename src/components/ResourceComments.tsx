@@ -34,7 +34,7 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
           content,
           created_at,
           user_id,
-          profiles!resource_comments_user_id_fkey (
+          profiles (
             first_name,
             last_name
           )
@@ -44,15 +44,17 @@ export const ResourceComments = ({ resourceId }: ResourceCommentsProps) => {
 
       if (error) throw error;
 
-      const formattedComments = data.map(comment => ({
-        ...comment,
-        profile: {
-          first_name: comment.profiles?.first_name || null,
-          last_name: comment.profiles?.last_name || null
-        }
-      }));
+      if (data) {
+        const formattedComments = data.map(comment => ({
+          ...comment,
+          profile: {
+            first_name: comment.profiles?.first_name || null,
+            last_name: comment.profiles?.last_name || null
+          }
+        }));
 
-      setComments(formattedComments);
+        setComments(formattedComments);
+      }
     } catch (error) {
       console.error('Error fetching comments:', error);
       toast({
