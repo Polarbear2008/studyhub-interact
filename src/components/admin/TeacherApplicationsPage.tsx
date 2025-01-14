@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Check, X, GraduationCap } from "lucide-react";
+import { Check, X, GraduationCap, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 type TeacherApplication = {
   id: string;
@@ -20,7 +21,36 @@ type TeacherApplication = {
 
 export const TeacherApplicationsPage = () => {
   const [applications, setApplications] = useState<TeacherApplication[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const checkAdminStatus = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    const { data: roles } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .single();
+
+    if (!roles || roles.role !== 'admin') {
+      navigate('/');
+      toast({
+        title: "Access Denied",
+        description: "You don't have permission to view this page",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsAdmin(true);
+  };
 
   const fetchApplications = async () => {
     const { data, error } = await supabase
@@ -39,6 +69,7 @@ export const TeacherApplicationsPage = () => {
     }
 
     setApplications(data || []);
+    setIsLoading(false);
   };
 
   const handleUpdateStatus = async (applicationId: string, newStatus: 'approved' | 'rejected') => {
@@ -113,8 +144,14 @@ export const TeacherApplicationsPage = () => {
   };
 
   useEffect(() => {
-    fetchApplications();
+    checkAdminStatus();
   }, []);
+
+  useEffect(() => {
+    if (isAdmin) {
+      fetchApplications();
+    }
+  }, [isAdmin]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -126,6 +163,18 @@ export const TeacherApplicationsPage = () => {
         return <Badge className="bg-yellow-500">Pending</Badge>;
     }
   };
+
+  if (!isAdmin) {
+    return null;
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-6">
@@ -189,7 +238,7 @@ export const TeacherApplicationsPage = () => {
                           className="bg-green-500 hover:bg-green-600"
                         >
                           <Check className="w-4 h-4 mr-2" />
-                          Approve
+                          Approve & Add to Hire Tutor
                         </Button>
                         <Button
                           onClick={() => handleUpdateStatus(application.id, 'rejected')}
