@@ -31,6 +31,7 @@ import { TermsConditions } from "./components/TermsConditions";
 import { Safeguarding } from "./components/Safeguarding";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ProfileEdit } from "./components/profile/ProfileEdit";
+import { NotFound } from "./components/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -135,6 +136,8 @@ const App = () => (
               </ProtectedRoute>
             } 
           />
+          {/* Catch-all route for 404 pages */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <ChatBot />
       </BrowserRouter>
