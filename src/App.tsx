@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navigation } from "./components/Navigation";
+import { ChatBot } from "./components/ChatBot";
 import { HomePage } from "./components/HomePage";
 import { TeacherLogin } from "./components/TeacherLogin";
 import { StudentLogin } from "./components/StudentLogin";
@@ -135,6 +136,7 @@ const App = () => (
             } 
           />
         </Routes>
+        <ChatBot />
       </BrowserRouter>
       <Toaster />
       <Sonner />
