@@ -7,11 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Upload } from "lucide-react";
+import { Loader2, Upload, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export const ProfileEdit = () => {
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
   const [profile, setProfile] = useState({
@@ -24,16 +26,22 @@ export const ProfileEdit = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          setError("No authenticated user found");
+          return;
+        }
+
         const { data, error } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', user.id)
-          .single();
+          .maybeSingle();
 
         if (error) {
           console.error('Error fetching profile:', error);
+          setError("Failed to fetch profile data");
           return;
         }
 
@@ -45,7 +53,12 @@ export const ProfileEdit = () => {
             description: data.description || "",
             avatar_url: data.avatar_url || "",
           });
+        } else {
+          setError("Profile not found. Please try logging in again.");
         }
+      } catch (err) {
+        console.error('Error:', err);
+        setError("An unexpected error occurred");
       }
     };
 
@@ -61,14 +74,12 @@ export const ProfileEdit = () => {
       const fileExt = file.name.split('.').pop();
       const filePath = `${crypto.randomUUID()}.${fileExt}`;
 
-      // Upload the file to Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
-      // Get the public URL
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
         .getPublicUrl(filePath);
@@ -101,14 +112,14 @@ export const ProfileEdit = () => {
 
       const { error } = await supabase
         .from('profiles')
-        .update({
+        .upsert({
+          id: user.id,
           first_name: profile.first_name,
           last_name: profile.last_name,
           field_of_study: profile.field_of_study,
           description: profile.description,
           avatar_url: profile.avatar_url,
-        })
-        .eq('id', user.id);
+        });
 
       if (error) throw error;
 
@@ -116,7 +127,7 @@ export const ProfileEdit = () => {
         title: "Success",
         description: "Profile updated successfully",
       });
-      navigate('/profile');
+      navigate('/');
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
@@ -128,6 +139,17 @@ export const ProfileEdit = () => {
       setLoading(false);
     }
   };
+
+  if (error) {
+    return (
+      <div className="container max-w-2xl py-8">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   return (
     <div className="container max-w-2xl py-8">
@@ -227,7 +249,7 @@ export const ProfileEdit = () => {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => navigate('/profile')}
+                onClick={() => navigate('/')}
               >
                 Cancel
               </Button>
