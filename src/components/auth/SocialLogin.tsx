@@ -2,11 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Chrome, Facebook } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
 
 export const SocialLogin = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
     try {
@@ -14,6 +12,10 @@ export const SocialLogin = () => {
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       });
 
