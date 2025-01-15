@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2 } from "lucide-react";
+import { Loader2, Download } from "lucide-react";
 import { ResourceRating } from "./ResourceRating";
 import { ResourceComments } from "./ResourceComments";
 import { BackButton } from "@/components/ui/back-button";
+import { Button } from "@/components/ui/button";
 
 interface Resource {
   id: string;
@@ -49,6 +50,38 @@ export const ResourcesNotesPage = () => {
     }
   };
 
+  const downloadResource = async (resource: Resource) => {
+    try {
+      const { data, error } = await supabase.storage
+        .from('educational_resources')
+        .download(resource.file_path);
+
+      if (error) throw error;
+
+      // Create a URL for the downloaded file
+      const url = window.URL.createObjectURL(data);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = resource.title; // Set the download filename
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toast({
+        title: "Success",
+        description: "File downloaded successfully",
+      });
+    } catch (error) {
+      console.error('Error downloading file:', error);
+      toast({
+        title: "Error",
+        description: "Failed to download file",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -81,6 +114,14 @@ export const ResourcesNotesPage = () => {
                     {resource.exam_board}
                   </span>
                 </div>
+                <Button 
+                  variant="outline" 
+                  className="w-full flex items-center justify-center gap-2"
+                  onClick={() => downloadResource(resource)}
+                >
+                  <Download className="h-4 w-4" />
+                  Download
+                </Button>
                 <ResourceRating resourceId={resource.id} />
                 <button
                   onClick={() => setSelectedResource(selectedResource === resource.id ? null : resource.id)}
