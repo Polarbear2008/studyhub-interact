@@ -18,6 +18,9 @@ serve(async (req) => {
       throw new Error('Message is required');
     }
 
+    // Log the incoming request for debugging
+    console.log('Incoming message:', message);
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -25,7 +28,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
@@ -43,19 +46,20 @@ serve(async (req) => {
     });
 
     if (!response.ok) {
-      console.error('OpenAI API error:', await response.text());
-      throw new Error('Failed to get response from OpenAI API');
+      const errorText = await response.text();
+      console.error('OpenAI API error response:', errorText);
+      throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
     }
 
     const data = await response.json();
     
-    // Log the response for debugging
+    // Log the API response for debugging
     console.log('OpenAI API Response:', data);
 
     // Validate the response structure
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+    if (!data.choices?.[0]?.message?.content) {
       console.error('Invalid API response structure:', data);
-      throw new Error('Invalid response from OpenAI API');
+      throw new Error('Invalid response structure from OpenAI API');
     }
 
     return new Response(JSON.stringify({ reply: data.choices[0].message.content }), {
@@ -64,7 +68,8 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in chat-with-ai function:', error);
     return new Response(JSON.stringify({ 
-      error: error.message || 'An error occurred while processing your request' 
+      error: error.message || 'An error occurred while processing your request',
+      timestamp: new Date().toISOString(),
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
