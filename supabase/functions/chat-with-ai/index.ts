@@ -6,6 +6,28 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Simple in-memory rate limiting
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const MAX_REQUESTS_PER_WINDOW = 20;
+const requestLog = new Map<string, number[]>();
+
+function isRateLimited(clientId: string): boolean {
+  const now = Date.now();
+  const clientRequests = requestLog.get(clientId) || [];
+  
+  // Clean up old requests
+  const recentRequests = clientRequests.filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW);
+  requestLog.set(clientId, recentRequests);
+  
+  return recentRequests.length >= MAX_REQUESTS_PER_WINDOW;
+}
+
+function logRequest(clientId: string) {
+  const requests = requestLog.get(clientId) || [];
+  requests.push(Date.now());
+  requestLog.set(clientId, requests);
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -13,12 +35,25 @@ serve(async (req) => {
 
   try {
     const { message } = await req.json();
+    const clientId = req.headers.get('x-client-info') || 'anonymous';
 
     if (!message) {
       throw new Error('Message is required');
     }
 
-    // Log the incoming request for debugging
+    // Check rate limit
+    if (isRateLimited(clientId)) {
+      return new Response(JSON.stringify({
+        error: 'Rate limit exceeded. Please try again later.',
+        timestamp: new Date().toISOString(),
+      }), {
+        status: 429,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Log the request
+    logRequest(clientId);
     console.log('Incoming message:', message);
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -48,15 +83,24 @@ serve(async (req) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('OpenAI API error response:', errorText);
+      
+      // Handle rate limiting from OpenAI specifically
+      if (response.status === 429) {
+        return new Response(JSON.stringify({
+          error: 'The service is currently busy. Please try again in a few moments.',
+          timestamp: new Date().toISOString(),
+        }), {
+          status: 429,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
       throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
     }
 
     const data = await response.json();
-    
-    // Log the API response for debugging
     console.log('OpenAI API Response:', data);
 
-    // Validate the response structure
     if (!data.choices?.[0]?.message?.content) {
       console.error('Invalid API response structure:', data);
       throw new Error('Invalid response structure from OpenAI API');
