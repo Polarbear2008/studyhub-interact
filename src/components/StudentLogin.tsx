@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { SocialLogin } from "./auth/SocialLogin";
 import { ForgotPassword } from "./auth/ForgotPassword";
 import { LoginForm } from "./auth/LoginForm";
@@ -45,12 +45,12 @@ export const StudentLogin = () => {
               
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{" "}
-                <a
-                  href="/student-signup"
+                <Link
+                  to="/student-signup"
                   className="font-medium text-blue-600 hover:text-blue-500"
                 >
                   Sign up
-                </a>
+                </Link>
               </p>
             </div>
 
