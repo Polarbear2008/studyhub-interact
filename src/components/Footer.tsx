@@ -112,13 +112,13 @@ export const Footer = () => {
           <div className="space-y-6">
             <Link to="/" className="block">
               <img
-                src="/lovable-uploads/34d657a1-cd67-49d6-b541-ac2dd86b032e.png"
-                alt="TutorChase"
+                src="/lovable-uploads/42b8b596-9401-496c-9ead-cfe109c222ae.png"
+                alt="Learn-Mate"
                 className="h-8"
               />
             </Link>
             <div className="space-y-2">
-              <p className="text-gray-600">info@tutorchase.com</p>
+              <p className="text-gray-600">info@learn-mate.com</p>
               <p className="text-gray-600">+44 (0)1865 306636</p>
               <p className="text-sm text-gray-500">
                 Office Hours: Mon-Fri 9am-6pm GMT
@@ -194,7 +194,7 @@ export const Footer = () => {
           </div>
         </div>
         <div className="mt-8 pt-8 border-t text-center text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} Sir Michael. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Learn-Mate. All rights reserved.</p>
         </div>
       </div>
     </footer>
