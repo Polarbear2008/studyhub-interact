@@ -58,11 +58,10 @@ export const ResourcesNotesPage = () => {
 
       if (error) throw error;
 
-      // Create a URL for the downloaded file
       const url = window.URL.createObjectURL(data);
       const a = document.createElement('a');
       a.href = url;
-      a.download = resource.title; // Set the download filename
+      a.download = resource.title;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -91,32 +90,32 @@ export const ResourcesNotesPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 animate-fade-in">
       <BackButton />
-      <h1 className="text-3xl font-bold mb-8">Study Notes</h1>
+      <h1 className="text-4xl font-bold mb-8 gradient-text">Study Notes</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {resources.map((resource) => (
-          <Card key={resource.id} className="hover:shadow-lg transition-shadow">
+          <Card key={resource.id} className="glass-card card-hover">
             <CardHeader>
-              <CardTitle>{resource.title}</CardTitle>
+              <CardTitle className="text-xl font-semibold">{resource.title}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <p className="text-sm text-gray-600">{resource.description}</p>
                 <div className="flex flex-wrap gap-2 text-sm">
-                  <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                  <span className="bg-gradient-primary text-white px-3 py-1 rounded-full">
                     {resource.subject}
                   </span>
-                  <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
+                  <span className="bg-gradient-secondary text-white px-3 py-1 rounded-full">
                     {resource.level}
                   </span>
-                  <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded">
+                  <span className="bg-gradient-accent text-white px-3 py-1 rounded-full">
                     {resource.exam_board}
                   </span>
                 </div>
                 <Button 
                   variant="outline" 
-                  className="w-full flex items-center justify-center gap-2"
+                  className="w-full flex items-center justify-center gap-2 hover:bg-gradient-primary hover:text-white transition-all duration-300"
                   onClick={() => downloadResource(resource)}
                 >
                   <Download className="h-4 w-4" />
@@ -125,12 +124,14 @@ export const ResourcesNotesPage = () => {
                 <ResourceRating resourceId={resource.id} />
                 <button
                   onClick={() => setSelectedResource(selectedResource === resource.id ? null : resource.id)}
-                  className="text-sm text-blue-600 hover:text-blue-800"
+                  className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
                 >
                   {selectedResource === resource.id ? "Hide Comments" : "Show Comments"}
                 </button>
                 {selectedResource === resource.id && (
-                  <ResourceComments resourceId={resource.id} />
+                  <div className="animate-scale-in">
+                    <ResourceComments resourceId={resource.id} />
+                  </div>
                 )}
               </div>
             </CardContent>
