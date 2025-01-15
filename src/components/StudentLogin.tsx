@@ -45,12 +45,13 @@ export const StudentLogin = () => {
               
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{" "}
-                <Link
-                  to="/student-signup"
-                  className="font-medium text-blue-600 hover:text-blue-500"
+                <Button
+                  variant="link"
+                  className="font-medium text-blue-600 hover:text-blue-500 p-0 h-auto"
+                  onClick={() => navigate('/student-signup')}
                 >
                   Sign up
-                </Link>
+                </Button>
               </p>
             </div>
 
