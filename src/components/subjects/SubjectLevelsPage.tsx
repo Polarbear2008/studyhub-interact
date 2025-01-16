@@ -14,10 +14,11 @@ interface SubjectLevelsPageProps {
 interface Resource {
   id: string;
   title: string;
-  description: string;
+  description: string | null;
   resource_type: string;
   file_path: string;
   category: "notes" | "practice_questions" | "past_papers";
+  level: string;  // Added this property to match the database schema
 }
 
 export const SubjectLevelsPage = ({ subject, description }: SubjectLevelsPageProps) => {
