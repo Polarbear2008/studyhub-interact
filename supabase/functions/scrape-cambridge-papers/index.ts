@@ -21,8 +21,8 @@ serve(async (req) => {
     const { subject, level, examBoard } = await req.json()
     console.log(`Scraping papers for ${subject} ${level} ${examBoard}`)
 
-    // Construct URL based on parameters
-    const baseUrl = `https://pastpapers.papacambridge.com/${level}/${examBoard}/${subject}`
+    // Construct base URL based on parameters
+    const baseUrl = `https://pastpapers.papacambridge.com/${encodeURIComponent(level)}/${encodeURIComponent(examBoard)}/${encodeURIComponent(subject)}`
     console.log('Scraping URL:', baseUrl)
 
     // Fetch the HTML content
@@ -47,6 +47,9 @@ serve(async (req) => {
       if (!href || !href.endsWith('.pdf')) continue
 
       // Extract paper details from filename
+      // Example filename patterns:
+      // 9709_s18_qp_12.pdf (AS/A Level)
+      // 0580_w19_qp_42.pdf (IGCSE)
       const match = href.match(/(\d{4})_([a-z]+)_qp_(\d+)/i)
       if (!match) continue
 
@@ -55,13 +58,18 @@ serve(async (req) => {
 
       try {
         // Download PDF
+        console.log(`Downloading ${title}...`)
         const pdfResponse = await fetch(`${baseUrl}/${href}`)
-        if (!pdfResponse.ok) continue
+        if (!pdfResponse.ok) {
+          console.error(`Failed to download ${title}: ${pdfResponse.statusText}`)
+          continue
+        }
         
         const pdfBlob = await pdfResponse.blob()
         const filePath = `${level}/${subject}/${examBoard}/${year}/${season}/paper${paperNumber}.pdf`
 
         // Upload to Supabase Storage
+        console.log(`Uploading ${title} to storage...`)
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from('educational_resources')
           .upload(filePath, pdfBlob, {
@@ -75,6 +83,7 @@ serve(async (req) => {
         }
 
         // Insert metadata into database
+        console.log(`Saving ${title} to database...`)
         const { error: dbError } = await supabase
           .from('past_papers')
           .insert({
@@ -97,6 +106,8 @@ serve(async (req) => {
           title,
           filePath
         })
+        
+        console.log(`Successfully processed ${title}`)
       } catch (error) {
         console.error('Error processing paper:', error)
         continue
