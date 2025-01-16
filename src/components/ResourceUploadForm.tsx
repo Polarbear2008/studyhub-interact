@@ -19,6 +19,7 @@ export const ResourceUploadForm = ({ onUploadSuccess }: ResourceUploadFormProps)
   const [subject, setSubject] = useState<string>("");
   const [level, setLevel] = useState<string>("");
   const [examBoard, setExamBoard] = useState<string>("");
+  const [category, setCategory] = useState<"notes" | "practice_questions" | "past_papers">("notes");
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
@@ -69,7 +70,8 @@ export const ResourceUploadForm = ({ onUploadSuccess }: ResourceUploadFormProps)
           exam_board: examBoard,
           file_path: filePath,
           content_type: file.type,
-          created_by: session.user.id
+          created_by: session.user.id,
+          category
         });
 
       if (dbError) throw dbError;
@@ -86,6 +88,7 @@ export const ResourceUploadForm = ({ onUploadSuccess }: ResourceUploadFormProps)
       setSubject("");
       setLevel("");
       setExamBoard("");
+      setCategory("notes");
       setFile(null);
 
       // Call the success callback if provided
@@ -127,16 +130,29 @@ export const ResourceUploadForm = ({ onUploadSuccess }: ResourceUploadFormProps)
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
+          <Label htmlFor="category">Resource Category</Label>
+          <Select value={category} onValueChange={(value: "notes" | "practice_questions" | "past_papers") => setCategory(value)} required>
+            <SelectTrigger>
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="notes">Notes</SelectItem>
+              <SelectItem value="practice_questions">Practice Questions</SelectItem>
+              <SelectItem value="past_papers">Past Papers</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
           <Label htmlFor="resourceType">Resource Type</Label>
           <Select value={resourceType} onValueChange={setResourceType} required>
             <SelectTrigger>
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="past_paper">Past Paper</SelectItem>
-              <SelectItem value="worksheet">Worksheet</SelectItem>
-              <SelectItem value="note">Note</SelectItem>
+              <SelectItem value="document">Document</SelectItem>
               <SelectItem value="video">Video</SelectItem>
+              <SelectItem value="interactive">Interactive Content</SelectItem>
             </SelectContent>
           </Select>
         </div>
